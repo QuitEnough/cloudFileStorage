@@ -1,4 +1,18 @@
 services:
+
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:8888/$NAME_DB
+      - SPRING_DATASOURCE_USER=$USER_DB
+      - SPRING_DATASOURCE_PASSWORD=$PASSWORD_DB
+    depends_on:
+      - db
+
   db:
     image: postgres
     container_name: db
