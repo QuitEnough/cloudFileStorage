@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.cloudfilestorage.cloudfilestorage.entity.User;
 import ru.cloudfilestorage.cloudfilestorage.exception.UserServiceCustomException;
+import ru.cloudfilestorage.cloudfilestorage.mapper.UserMapper;
 import ru.cloudfilestorage.cloudfilestorage.model.UserRequest;
 import ru.cloudfilestorage.cloudfilestorage.model.UserResponse;
 import ru.cloudfilestorage.cloudfilestorage.repository.UserRepository;
@@ -25,10 +26,7 @@ public class UserServiceImpl implements UserService{
     public long addUser(UserRequest userRequest) {
         log.info("Adding user ...");
 
-        User user = User.builder()
-                .userName(userRequest.getUserName())
-                .password(userRequest.getPassword())
-                .build();
+        User user = UserMapper.INSTANCE.toUser(userRequest);
 
         userRepository.save(user);
 
@@ -49,10 +47,7 @@ public class UserServiceImpl implements UserService{
                         )
                 );
 
-        UserResponse userResponse = new UserResponse().builder()
-                .userId(String.valueOf(userId))
-                .userName(user.getUserName())
-                .build();
+        UserResponse userResponse = UserMapper.INSTANCE.toUserResponse(user);
 
         log.info("[Service] get user data returning for: {}", userResponse);
         return userResponse;
