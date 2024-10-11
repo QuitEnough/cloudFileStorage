@@ -2,15 +2,10 @@ package ru.cloudfilestorage.cloudfilestorage.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.NamedQuery;
 
-@NamedQuery(
-        name = "User.findByUserNameAndId",
-        query = "SELECT u from User u where u.userName = ?1 and u.id = ?2"
-)
 @Entity
 @Table(
-        name = "usr",
+        name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "USER_NAME_UNIQUE",

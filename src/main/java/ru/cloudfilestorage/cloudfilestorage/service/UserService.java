@@ -8,6 +8,5 @@ public interface UserService {
 
     long addUser(UserRequest userRequest);
     UserResponse getUserById(long userId);
-    UserResponse getUserByUserName(String userName);
 
 }

@@ -49,24 +49,13 @@ public class UserServiceImpl implements UserService{
                         )
                 );
 
-        UserResponse userResponse = new UserResponse();
-        BeanUtils.copyProperties(user, userResponse);
+        UserResponse userResponse = new UserResponse().builder()
+                .userId(String.valueOf(userId))
+                .userName(user.getUserName())
+                .build();
 
+        log.info("[Service] get user data returning for: {}", userResponse);
         return userResponse;
     }
 
-    @Override
-    public UserResponse getUserByUserName(String userName) {
-        User user = userRepository.findByUserName(userName)
-                .orElseThrow(
-                        () -> new UserServiceCustomException(
-                                "User with given user_name not found",
-                                "USER_NOT_FOUND"
-                        )
-                );
-        UserResponse userResponse = new UserResponse();
-        BeanUtils.copyProperties(user, userResponse);
-
-        return userResponse;
-    }
 }
