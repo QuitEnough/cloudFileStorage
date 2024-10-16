@@ -1,6 +1,9 @@
 package ru.cloudfilestorage.cloudfilestorage.model;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
@@ -9,12 +12,13 @@ import org.hibernate.validator.constraints.Length;
 @Setter
 public class UserRequest {
 
-    @NotNull
-    @Length(min = 2)
-    private String userName;
+    @Email(message = "Email is not valid", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
+    @NotEmpty(message = "Email cannot be empty")
+    private String email;
 
-    @NotNull
-    @Length(min = 2)
+    @NotNull(message = "Password should not be empty")
+    @Length(min = 3)
+    @Pattern(message = "not strong enough", regexp = "^(?=.*\\d)(?=.*[A-Z]).{6,8}$")
     private String password;
 
 }

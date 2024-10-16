@@ -8,8 +8,8 @@ import lombok.*;
         name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "USER_NAME_UNIQUE",
-                        columnNames = "USER_NAME"
+                        name = "EMAIL_UNIQUE",
+                        columnNames = "EMAIL"
                 )
         }
 )
@@ -25,8 +25,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "USER_NAME", nullable = false)
-    private String userName;
+    @Column(name = "EMAIL", nullable = false)
+    private String email;
 
     @Column(name = "PASSWORD", nullable = false)
     private String password;

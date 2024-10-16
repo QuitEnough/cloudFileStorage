@@ -7,13 +7,9 @@ spring:
     url: "jdbc:postgresql://localhost:8888/${NAME_DB}"
     username: ${USER_DB}
     password: ${PASSWORD_DB}
-  #liquibase:
-   # enabled: false
-    #change-log: db/changelog/db.changelog-master.yaml
-  flyway:
-    user: admin
-    password: secret
-    schemas: cloudFileService
+  liquibase:
+    enabled: true
+    change-log: db/changelog.yaml
 
   jpa:
     hibernate:
