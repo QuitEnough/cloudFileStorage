@@ -5,11 +5,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    restart: always
+    restart: no
+    ports:
+      - 8081:8081
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:8888/$NAME_DB
-      - SPRING_DATASOURCE_USER=$USER_DB
-      - SPRING_DATASOURCE_PASSWORD=$PASSWORD_DB
+      HOST_DB: db
+      PORT_DB: 5432
+      NAME_DB: ${NAME_DB}
+      USER_DB: ${USER_DB}
+      PASSWORD_DB: ${PASSWORD_DB}
     depends_on:
       - db
 
@@ -31,6 +35,7 @@ networks:
     driver: bridge
 volumes:
   postgres_data:
+
 
 
 
