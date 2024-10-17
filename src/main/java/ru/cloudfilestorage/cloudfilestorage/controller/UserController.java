@@ -5,11 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.cloudfilestorage.cloudfilestorage.model.UserRequest;
-import ru.cloudfilestorage.cloudfilestorage.model.UserResponse;
+import ru.cloudfilestorage.cloudfilestorage.dto.UserRequest;
+import ru.cloudfilestorage.cloudfilestorage.dto.UserResponse;
 import ru.cloudfilestorage.cloudfilestorage.service.UserServiceImpl;
 
 @Slf4j
@@ -32,11 +30,11 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable("id") Long userId) {
+    public UserResponse getUserById(@PathVariable("id") Long userId) {
         log.info("[RequestParams] get user data for userId: {}", userId);
         UserResponse userResponse = userService.getUserById(userId);
         log.info("[Response] get user data {}", userResponse);
-        return new ResponseEntity<>(userResponse, HttpStatus.OK);
+        return userResponse;
     }
 
 }

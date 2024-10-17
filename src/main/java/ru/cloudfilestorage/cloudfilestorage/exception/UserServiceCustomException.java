@@ -7,10 +7,7 @@ import lombok.Setter;
 @Setter
 public class UserServiceCustomException extends RuntimeException {
 
-    private String errorCode;
-
-    public UserServiceCustomException(String message, String errorCode) {
+    public UserServiceCustomException(String message) {
         super(message);
-        this.errorCode = errorCode;
     }
 }

@@ -1,4 +1,4 @@
-package ru.cloudfilestorage.cloudfilestorage.model;
+package ru.cloudfilestorage.cloudfilestorage.dto;
 
 import lombok.*;
 

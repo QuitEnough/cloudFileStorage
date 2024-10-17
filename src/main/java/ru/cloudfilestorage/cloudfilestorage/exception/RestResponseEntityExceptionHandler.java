@@ -1,11 +1,10 @@
 package ru.cloudfilestorage.cloudfilestorage.exception;
 
 import jakarta.validation.ConstraintViolationException;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import ru.cloudfilestorage.cloudfilestorage.model.ErrorResponse;
+import ru.cloudfilestorage.cloudfilestorage.dto.ErrorResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;

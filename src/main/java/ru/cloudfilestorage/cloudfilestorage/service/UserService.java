@@ -1,8 +1,7 @@
 package ru.cloudfilestorage.cloudfilestorage.service;
 
-import ru.cloudfilestorage.cloudfilestorage.entity.User;
-import ru.cloudfilestorage.cloudfilestorage.model.UserRequest;
-import ru.cloudfilestorage.cloudfilestorage.model.UserResponse;
+import ru.cloudfilestorage.cloudfilestorage.dto.UserRequest;
+import ru.cloudfilestorage.cloudfilestorage.dto.UserResponse;
 
 public interface UserService {
 

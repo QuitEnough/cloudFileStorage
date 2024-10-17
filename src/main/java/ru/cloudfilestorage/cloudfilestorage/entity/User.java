@@ -4,15 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(
-        name = "users",
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "EMAIL_UNIQUE",
-                        columnNames = "EMAIL"
-                )
-        }
-)
+@Table(name = "users")
 @Getter
 @Setter
 @ToString
