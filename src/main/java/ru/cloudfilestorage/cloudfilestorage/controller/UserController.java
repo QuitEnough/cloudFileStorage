@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.cloudfilestorage.cloudfilestorage.dto.UserRequest;
-import ru.cloudfilestorage.cloudfilestorage.dto.UserResponse;
+import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserRequest;
+import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserResponse;
 import ru.cloudfilestorage.cloudfilestorage.service.UserServiceImpl;
 
 @Slf4j

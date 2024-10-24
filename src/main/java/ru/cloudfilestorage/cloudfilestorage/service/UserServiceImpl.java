@@ -1,19 +1,21 @@
 package ru.cloudfilestorage.cloudfilestorage.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import ru.cloudfilestorage.cloudfilestorage.entity.User;
+import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserRequest;
+import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserResponse;
+import ru.cloudfilestorage.cloudfilestorage.domain.entity.User;
 import ru.cloudfilestorage.cloudfilestorage.exception.UserServiceCustomException;
-import ru.cloudfilestorage.cloudfilestorage.mapper.UserMapper;
-import ru.cloudfilestorage.cloudfilestorage.dto.UserRequest;
-import ru.cloudfilestorage.cloudfilestorage.dto.UserResponse;
+import ru.cloudfilestorage.cloudfilestorage.domain.mapper.UserMapper;
 import ru.cloudfilestorage.cloudfilestorage.repository.UserRepository;
 
 @Service
 @Slf4j
-@AllArgsConstructor
-public class UserServiceImpl implements UserService{
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -29,6 +31,7 @@ public class UserServiceImpl implements UserService{
         return user.getId();
     }
 
+
     @Override
     public UserResponse getUserById(long userId) {
 
@@ -41,5 +44,22 @@ public class UserServiceImpl implements UserService{
 
         return userResponse;
     }
+
+    @Override
+    public boolean isExists(UserRequest userRequest) {
+        return userRepository.existsByEmail(userRequest.getEmail());
+    }
+
+    private User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(
+                        () -> new UserServiceCustomException("User with given email is not found")
+                );
+    }
+
+    public UserDetailsService userDetailsService() {
+        return this::getUserByEmail;
+    }
+
 
 }

@@ -1,4 +1,4 @@
-package ru.cloudfilestorage.cloudfilestorage.dto;
+package ru.cloudfilestorage.cloudfilestorage.domain.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
