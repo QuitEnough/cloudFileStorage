@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserRequest;
+import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserCreateRequest;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserResponse;
+import ru.cloudfilestorage.cloudfilestorage.domain.entity.User;
 import ru.cloudfilestorage.cloudfilestorage.service.UserServiceImpl;
 
-@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -23,18 +23,18 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> addUser(@RequestBody @Valid UserRequest userRequest) {
-        long userId = userService.addUser(userRequest);
-        log.info("[Response] user added with data: {}", userRequest);
-        return new ResponseEntity<>(userId, HttpStatus.CREATED);
+    public ResponseEntity<Void> addUser(@RequestBody @Valid UserCreateRequest userRequest) {
+        userService.addUser(userRequest);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
     public UserResponse getUserById(@PathVariable("id") Long userId) {
-        log.info("[RequestParams] get user data for userId: {}", userId);
-        UserResponse userResponse = userService.getUserById(userId);
-        log.info("[Response] get user data {}", userResponse);
-        return userResponse;
+        return userService.getUserById(userId);
     }
 
+    @GetMapping(value = "/byEmail/{email}", produces = "application/json")
+    public User getUserByEmail(@PathVariable String email) {
+        return userService.getUserByEmail(email);
+    }
 }

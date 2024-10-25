@@ -1,12 +1,17 @@
 package ru.cloudfilestorage.cloudfilestorage.service;
 
-import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserRequest;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserCreateRequest;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserResponse;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
-    long addUser(UserRequest userRequest);
+    void addUser(UserCreateRequest request);
+
     UserResponse getUserById(long userId);
-    boolean isExists(UserRequest userRequest);
 
+    @Override
+    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 }
