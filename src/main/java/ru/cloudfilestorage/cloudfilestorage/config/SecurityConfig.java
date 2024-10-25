@@ -33,14 +33,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                // Своего рода отключение CORS (разрешение запросов со всех доменов)
+        http.csrf(AbstractHttpConfigurer::disable) //CSRF (cross-site request forgery)
+                // Своего рода отключение CORS (CORS (Cross-Origin Resource Sharing) - разрешение запросов со всех доменов
+                // (JS-скрипт  одного сайта обращается на другой сайт без специального разрешения))
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
                     corsConfiguration.setAllowedOriginPatterns(List.of("*"));
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfiguration.setAllowedHeaders(List.of("*"));
-                    corsConfiguration.setAllowCredentials(true);
+                    corsConfiguration.setAllowCredentials(true); //credentials - реквизиты для входа
                     return corsConfiguration;
                 }))
                 // Настройка доступа к конечным точкам

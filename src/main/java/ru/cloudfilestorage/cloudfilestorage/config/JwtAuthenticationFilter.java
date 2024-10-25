@@ -36,17 +36,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
+        // Получаем токен из заголовка
         var authHeader = request.getHeader(HEADER_NAME);
-        if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, BEARER_PREFIX)) {
+        if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, BEARER_PREFIX)) { //StringUtils - Operations on String that are null safe
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Обрезаем префикс и получаем имя пользователя из токена
+        // Обрезаем префикс и получаем почту пользователя из токена
         var jwt = authHeader.substring(BEARER_PREFIX.length());
         var email = jwtService.extractEmail(jwt);
 
-        if (StringUtils.isNotEmpty(email) && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (StringUtils.isNotEmpty(email) && SecurityContextHolder.getContext().getAuthentication() == null) {  //SecurityContextHolder - место, где хранятся детали о текущем security context,
+                                                                                                                // например детали принципала который в текущий момент пользуется приложением
             UserDetails userDetails = userService
                     .userDetailsService()
                     .loadUserByUsername(email);

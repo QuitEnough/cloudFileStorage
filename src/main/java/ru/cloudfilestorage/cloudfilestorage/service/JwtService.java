@@ -22,7 +22,7 @@ public class JwtService {
     @Value("${token.signing.key}")
     private String jwtSignInKey;
 
-    // Извлечение имени пользователя из токена
+    // Извлечение почты пользователя из токена
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject); // Claims is an immutable JSON map
     }
@@ -48,11 +48,26 @@ public class JwtService {
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
+    /**
+     * Извлечение данных из токена
+     *
+     * @param token           токен
+     * @param claimsResolver функция извлечения данных
+     * @param <T>             тип данных
+     * @return данные
+     */
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
+    /**
+     * Генерация токена
+     *
+     * @param extraClaims дополнительные данные
+     * @param userDetails данные пользователя
+     * @return токен
+     */
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -68,13 +83,25 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    /**
+     * Извлечение всех данных из токена
+     *
+     * @param token токен
+     * @return данные
+     */
     private Claims extractAllClaims(String token) {
+        // Jwts.parser() - returns a new JwtParserBuilder instance that can be configured to create an immutable/thread-safe JwtParser.
         return Jwts.parser().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
     }
 
+    /**
+     * Получение ключа для подписи токена
+     *
+     * @return ключ
+     */
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSignInKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(keyBytes); //Creates a new SecretKey instance for use with HMAC-SHA algorithms
     }
 
 }

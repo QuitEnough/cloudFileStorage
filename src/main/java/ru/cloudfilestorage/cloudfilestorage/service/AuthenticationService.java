@@ -1,7 +1,8 @@
 package ru.cloudfilestorage.cloudfilestorage.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.JwtAuthenticationResponse;
@@ -20,8 +21,7 @@ public class AuthenticationService {
     private final UserMapper userMapper;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
-    private final AuthorizationManager authorizationManager;
-    private final AuthorizationManager authorizationManager;
+    private final AuthenticationManager authenticationManager; // Processes an Authentication request
 
     public JwtAuthenticationResponse signUp(SignUpRequest request) {
 
@@ -41,10 +41,10 @@ public class AuthenticationService {
     }
 
     public JwtAuthenticationResponse signIn(SignInRequest request) {
-        /*authorizationManager.authenticate(new UsernamePasswordAuthenticationToken(
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken( // designed for simple presentation of a username and password
                 request.getEmail(),
                 request.getPassword()
-        ));*/
+        ));
 
         var user = userService
                 .userDetailsService()
