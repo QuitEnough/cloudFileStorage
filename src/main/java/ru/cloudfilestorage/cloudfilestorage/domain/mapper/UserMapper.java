@@ -6,6 +6,7 @@ import org.mapstruct.MappingConstants;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserCreateRequest;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.User;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserResponse;
+import ru.cloudfilestorage.cloudfilestorage.domain.entity.UserDetailsImpl;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
@@ -17,5 +18,7 @@ public interface UserMapper {
     UserCreateRequest toUserRequest(User user);
 
     User toUser(UserCreateRequest userRequest);
+
+    UserDetailsImpl toUserDetails(User user);
 
 }

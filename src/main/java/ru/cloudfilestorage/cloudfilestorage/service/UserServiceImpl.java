@@ -43,19 +43,12 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserResponse(user);
     }
 
-    //TODO: переделать на mapper
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User with given email is not found"));
 
-        UserDetailsImpl userDetails = new UserDetailsImpl();
-        userDetails.setId(user.getId());
-        userDetails.setEmail(user.getEmail());
-        userDetails.setPassword(user.getPassword());
-        userDetails.setRole(user.getRole());
-
-        return userDetails;
+        return userMapper.toUserDetails(user);
     }
 
     public User getUserByEmail(String email) {
