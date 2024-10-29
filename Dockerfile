@@ -3,6 +3,7 @@ FROM maven:3 as build
 WORKDIR /build
 COPY src src
 COPY pom.xml pom.xml
+COPY checkstyle.xml checkstyle.xml
 RUN --mount=type=cache,target=/root/.m2 mvn clean package -DskipTests
 
 FROM openjdk:17

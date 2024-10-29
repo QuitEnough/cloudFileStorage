@@ -20,4 +20,7 @@ spring:
         format_sql: true
   application:
     name: USER-SERVICE
+token:
+  signing:
+    key: ${TOKEN_SIGNING_KEY}
 

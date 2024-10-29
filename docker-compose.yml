@@ -14,6 +14,7 @@ services:
       NAME_DB: ${NAME_DB}
       USER_DB: ${USER_DB}
       PASSWORD_DB: ${PASSWORD_DB}
+      TOKEN_SIGNING_KEY: ${TOKEN_SIGNING_KEY}
     depends_on:
       - db
 
