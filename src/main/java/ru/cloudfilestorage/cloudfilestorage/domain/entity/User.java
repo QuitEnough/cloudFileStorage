@@ -29,10 +29,8 @@ public class User {
     @Column(name = "ROLE")
     private Role role;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(inverseJoinColumns = @JoinColumn(name = "FILE_ID"))
-    private List<File> files;
-
-
+//    @OneToMany(fetch = FetchType.EAGER)
+//    @JoinTable(inverseJoinColumns = @JoinColumn(name = "FILE_ID"))
+//    private List<File> files;
 
 }
