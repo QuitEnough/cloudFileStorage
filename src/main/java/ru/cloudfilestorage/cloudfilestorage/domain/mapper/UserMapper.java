@@ -12,7 +12,6 @@ import ru.cloudfilestorage.cloudfilestorage.domain.entity.UserDetailsImpl;
 public interface UserMapper {
 
     @Mapping(source = "id", target = "userId")
-
     UserResponse toUserResponse(User user);
 
     UserCreateRequest toUserRequest(User user);

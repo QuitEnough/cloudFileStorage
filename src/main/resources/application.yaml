@@ -20,6 +20,13 @@ spring:
         format_sql: true
   application:
     name: USER-SERVICE
+
+  minio:
+    url: http://localhost:9001
+    bucket: ${MINIO_BUCKET_NAME}
+    access-key: ${MINIO_ACCESS_KEY}
+    secret-key: ${MINIO_SECRET_KEY}
+    port: 9000
 token:
   signing:
     key: ${TOKEN_SIGNING_KEY}

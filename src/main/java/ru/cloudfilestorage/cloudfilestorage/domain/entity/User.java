@@ -3,6 +3,8 @@ package ru.cloudfilestorage.cloudfilestorage.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -26,6 +28,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "ROLE")
     private Role role;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(inverseJoinColumns = @JoinColumn(name = "FILE_ID"))
+    private List<File> files;
 
 
 

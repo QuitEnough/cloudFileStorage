@@ -1,7 +1,6 @@
 package ru.cloudfilestorage.cloudfilestorage.controller;
 
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserCreateRequest;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserResponse;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.User;
-import ru.cloudfilestorage.cloudfilestorage.service.UserServiceImpl;
+import ru.cloudfilestorage.cloudfilestorage.service.impl.UserServiceImpl;
 
 @RestController
 @RequestMapping("/users")

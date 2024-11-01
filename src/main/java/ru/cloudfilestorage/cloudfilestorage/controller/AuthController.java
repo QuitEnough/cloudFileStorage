@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.*;
 import ru.cloudfilestorage.cloudfilestorage.service.JwtService;
-import ru.cloudfilestorage.cloudfilestorage.service.UserServiceImpl;
+import ru.cloudfilestorage.cloudfilestorage.service.impl.UserServiceImpl;
 
 @RestController
 @RequestMapping("/public")

@@ -1,20 +1,18 @@
-package ru.cloudfilestorage.cloudfilestorage.service;
+package ru.cloudfilestorage.cloudfilestorage.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserCreateRequest;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserResponse;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.Role;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.User;
-import ru.cloudfilestorage.cloudfilestorage.domain.entity.UserDetailsImpl;
 import ru.cloudfilestorage.cloudfilestorage.domain.mapper.UserMapper;
-import ru.cloudfilestorage.cloudfilestorage.exception.UserServiceCustomException;
+import ru.cloudfilestorage.cloudfilestorage.exception.ServiceCustomException;
 import ru.cloudfilestorage.cloudfilestorage.repository.UserRepository;
+import ru.cloudfilestorage.cloudfilestorage.service.UserService;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +36,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getUserById(long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserServiceCustomException("User with given id not found"));
+                .orElseThrow(() -> new ServiceCustomException("User with given id not found"));
 
         return userMapper.toUserResponse(user);
     }
@@ -53,6 +51,6 @@ public class UserServiceImpl implements UserService {
 
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserServiceCustomException("User with given email is not found"));
+                .orElseThrow(() -> new ServiceCustomException("User with given email is not found"));
     }
 }
