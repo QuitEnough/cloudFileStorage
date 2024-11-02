@@ -1,16 +1,17 @@
 package ru.cloudfilestorage.cloudfilestorage.service;
 
+import org.springframework.web.multipart.MultipartFile;
 
-import ru.cloudfilestorage.cloudfilestorage.domain.entity.File;
-
+import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 public interface MinioService {
 
-    boolean save(File file);
+    boolean save(UUID uuid, MultipartFile multipartFile) throws IOException; //Multipart можно ли положить в БД
 
     void delete(UUID uuid);
 
-    File find(UUID uuid);
+    MultipartFile find(UUID uuid);
 
 }

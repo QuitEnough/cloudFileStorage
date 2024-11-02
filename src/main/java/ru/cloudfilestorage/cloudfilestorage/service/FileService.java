@@ -7,10 +7,10 @@ import java.util.Optional;
 
 public interface FileService {
 
-    boolean save(String name, MultipartFile file);
+    boolean save(String name, MultipartFile file, Long directoryId);
 
     void delete(Long fileId);
 
-    Optional<File> find(Long fileId);
+    Optional<File> download(Long fileId);
 
 }

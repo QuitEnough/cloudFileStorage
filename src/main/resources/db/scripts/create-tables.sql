@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS directories
     UNIQUE (id, user_id, parent_id)
 );
 
-CREATE TABLE IF NOT EXISTS files (
+CREATE TABLE IF NOT EXISTS files
+(
     id BIGSERIAL PRIMARY KEY NOT NULL,
     name VARCHAR(200) NOT NULL,
     extension VARCHAR(200) NOT NULL,

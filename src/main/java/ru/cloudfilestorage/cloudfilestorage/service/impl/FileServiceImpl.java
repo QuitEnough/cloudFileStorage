@@ -20,18 +20,25 @@ public class FileServiceImpl implements FileService {
 
     private DirectoryRepository directoryRepository;
 
+    private MinioServiceImpl minioService;
+
     @Override
-    public boolean save(String name, MultipartFile multipartFile) {
+    public boolean save(String name, MultipartFile multipartFile, Long directoryId) {
         String[] fileName = StringUtils.splitByWholeSeparator(name, "\\.");
+        UUID uuid = UUID.fromString(name);
+
         File file = File
                 .builder()
                 .name(fileName[0])
                 .extension(fileName[1])
-                .uuid(UUID.fromString(name))
-                .directoryId(1L)                // ????????????
+                .uuid(uuid)
+                .directoryId(directoryId)
                 .build();
+
         fileRepository.save(file);
-        return false;
+        minioService.save(uuid, multipartFile);
+
+        return true;
     }
 
     @Override
@@ -40,7 +47,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public Optional<File> find(Long fileId) {
+    public Optional<File> download(Long fileId) {
         return Optional.of(fileRepository.findById(fileId)).get();
     }
 

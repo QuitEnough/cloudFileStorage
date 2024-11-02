@@ -3,18 +3,19 @@ package ru.cloudfilestorage.cloudfilestorage.service.impl;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
-import io.minio.RestoreObjectArgs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.cloudfilestorage.cloudfilestorage.domain.entity.File;
+import org.springframework.web.multipart.MultipartFile;
 import ru.cloudfilestorage.cloudfilestorage.exception.BaseException;
 import ru.cloudfilestorage.cloudfilestorage.repository.FileRepository;
 import ru.cloudfilestorage.cloudfilestorage.service.MinioService;
 
-
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.UUID;
 
 @Service
@@ -29,15 +30,15 @@ public class MinioServiceImpl implements MinioService {
     private MinioClient minioClient;
 
     @Override
-    public boolean save(File file) {
-        InputStream inputStream = new ByteArrayInputStream(file.getBytes()); // как совместить два класса io.Files и мой
+    public boolean save(UUID uuid, MultipartFile multipartFile) throws IOException {
+        InputStream inputStream = new ByteArrayInputStream(multipartFile.getBytes());
         try {
             minioClient.putObject(
                     PutObjectArgs
                             .builder()
                             .stream(inputStream, inputStream.available(), -1)
                             .bucket(bucket)
-                            .object(file.getUuid().toString())
+                            .object(uuid.toString())
                             .build());
         } catch (Exception e) {
             throw new BaseException("Unable to delete file");
@@ -61,6 +62,7 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public File find(UUID uuid) {
+        fileRepository.findByUuid(uuid); //возвращает мой класс File. есть ощущение, что нарушена логика
         return null;
     }
 
