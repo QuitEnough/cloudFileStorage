@@ -1,25 +1,33 @@
 package ru.cloudfilestorage.cloudfilestorage.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import java.io.Serializable;
+import java.util.UUID;
 
 @Entity
 @Table(name = "files")
 @Getter
 @Setter
-public class File implements Serializable {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class File {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "TITLE")
-    private String title;
+    @Column(name = "NAME")
+    private String name;
 
-    @Column(name = "USER_ID")
-    private Long userId;
+    @Column(name = "EXTENSION")
+    private String extension;
+
+    @Column(name = "UUID")
+    private UUID uuid;
+
+    @Column(name = "DIRECTORY_ID")
+    private Long directoryId;
 
 }

@@ -10,7 +10,7 @@ import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserResponse;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.Role;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.User;
 import ru.cloudfilestorage.cloudfilestorage.domain.mapper.UserMapper;
-import ru.cloudfilestorage.cloudfilestorage.exception.CustomException;
+import ru.cloudfilestorage.cloudfilestorage.exception.BaseException;
 import ru.cloudfilestorage.cloudfilestorage.repository.UserRepository;
 import ru.cloudfilestorage.cloudfilestorage.service.UserService;
 
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getUserById(long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException("User with given id not found"));
+                .orElseThrow(() -> new BaseException("User with given id not found"));
 
         return userMapper.toUserResponse(user);
     }
@@ -51,6 +51,6 @@ public class UserServiceImpl implements UserService {
 
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException("User with given email is not found"));
+                .orElseThrow(() -> new BaseException("User with given email is not found"));
     }
 }

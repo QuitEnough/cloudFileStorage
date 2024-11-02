@@ -1,29 +1,16 @@
 package ru.cloudfilestorage.cloudfilestorage.service;
 
-import org.springframework.web.multipart.MultipartFile;
-import ru.cloudfilestorage.cloudfilestorage.domain.entity.File;
-import ru.cloudfilestorage.cloudfilestorage.domain.entity.MinioObject;
 
-import java.util.List;
+import ru.cloudfilestorage.cloudfilestorage.domain.entity.File;
+
+import java.util.UUID;
 
 public interface MinioService {
 
-    List<MinioObject> folderList(String userFolder);
+    boolean save(File file);
 
-    File getFileById(Long id);
+    void delete(UUID uuid);
 
-    List<File> getAllFilesByUserId(Long id);
-
-    void createFolder(String folderName);
-
-    boolean folderExists(String folderName);
-
-    void deleteFolder(String[] folderName);
-
-    void uploadFile(String userDirectory, MultipartFile[] files);
-
-    void renameFile(String filePath, String fileNewName);
-
-    void renameDirectory(String filePath, String fileName);
+    File find(UUID uuid);
 
 }

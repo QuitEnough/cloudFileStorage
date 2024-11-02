@@ -31,6 +31,6 @@ public class User {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(inverseJoinColumns = @JoinColumn(name = "FILE_ID"))
-    private List<File> files;
+    private List<Directory> directories;
 
 }
