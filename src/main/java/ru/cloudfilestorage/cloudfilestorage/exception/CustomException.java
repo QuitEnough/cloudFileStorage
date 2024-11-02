@@ -5,9 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ServiceCustomException extends RuntimeException {
+public class CustomException extends RuntimeException {
 
-    public ServiceCustomException(String message) {
+    public CustomException(String message) {
         super(message);
     }
 }

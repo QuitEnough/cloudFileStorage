@@ -19,7 +19,7 @@ public class File implements Serializable {
     @Column(name = "TITLE")
     private String title;
 
-//    @Column(name = "USER_ID")
-//    private Long userId;
+    @Column(name = "USER_ID")
+    private Long userId;
 
 }

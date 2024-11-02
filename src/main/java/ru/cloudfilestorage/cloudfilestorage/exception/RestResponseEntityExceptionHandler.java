@@ -25,8 +25,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(errorResponse.getStatusCode()));
     }
 
-    @ExceptionHandler({ServiceCustomException.class})
-    public ResponseEntity<ErrorResponse> handleUserServiceException(ServiceCustomException ex) {
+    @ExceptionHandler({CustomException.class})
+    public ResponseEntity<ErrorResponse> handleUserServiceException(CustomException ex) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(errorResponse.getStatusCode()));
     }
