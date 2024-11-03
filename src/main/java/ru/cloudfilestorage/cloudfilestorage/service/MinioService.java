@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface MinioService {
 
-    boolean save(UUID uuid, MultipartFile multipartFile) throws IOException; //Multipart можно ли положить в БД
+    boolean save(UUID uuid, MultipartFile multipartFile); //Multipart можно ли положить в БД
 
     void delete(UUID uuid);
 

@@ -8,6 +8,7 @@ import ru.cloudfilestorage.cloudfilestorage.service.MinioService;
 import ru.cloudfilestorage.cloudfilestorage.service.impl.FileServiceImpl;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -27,16 +28,15 @@ public class FileController {
     public ResponseEntity<Void> upload(@RequestParam("name") String name,
                                        @RequestParam("file") MultipartFile file,
                                        @RequestParam("directory_id") Long directoryId) {
-        fileService.save(name, file);
+        fileService.save(name, file, directoryId);
         minioService.save(UUID.fromString(name), file);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/find")
-    public MultipartFile findFile(@RequestParam("fileId") Long fileId) throws IOException { //погуглить, нужно открывать поток
-
-        fileService.download(fileId);
-        return minioService.find(null);
+    public MultipartFile findFile(@RequestParam("fileId") Long fileId) { //погуглить, нужно открывать поток
+        return fileService.download(fileId);
+        //return minioService.find(null);
     }
 
 }

@@ -47,8 +47,9 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public Optional<File> download(Long fileId) {
-        return Optional.of(fileRepository.findById(fileId)).get();
+    public MultipartFile download(Long fileId) {
+        File file = fileRepository.findById(fileId).get();
+        return minioService.find(file.getUuid());
     }
 
 }

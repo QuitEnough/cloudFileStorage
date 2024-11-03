@@ -30,9 +30,9 @@ public class MinioServiceImpl implements MinioService {
     private MinioClient minioClient;
 
     @Override
-    public boolean save(UUID uuid, MultipartFile multipartFile) throws IOException {
-        InputStream inputStream = new ByteArrayInputStream(multipartFile.getBytes());
+    public boolean save(UUID uuid, MultipartFile multipartFile) {
         try {
+            InputStream inputStream = new ByteArrayInputStream(multipartFile.getBytes());
             minioClient.putObject(
                     PutObjectArgs
                             .builder()
@@ -61,34 +61,9 @@ public class MinioServiceImpl implements MinioService {
     }
 
     @Override
-    public File find(UUID uuid) {
+    public MultipartFile find(UUID uuid) {
         fileRepository.findByUuid(uuid); //возвращает мой класс File. есть ощущение, что нарушена логика
         return null;
     }
-
-    /*
-    * minioClient.putObject(
-                    PutObjectArgs
-                            .builder()
-                            .bucket(bucket)
-                            .object(objectName)
-                            .stream(new ByteArrayInputStream(new byte[]{}), 0, -1)
-                            .build());
-    * */
-
-    /*InputStream in = new ByteArrayInputStream(file.getBytes());
-    String fileName = file.getOriginalFilename();
-    String objectName = StringUtils.join(userDirectory, "/", fileName);
-
-                minioClient.putObject(
-                        PutObjectArgs
-                                .builder()
-                        .bucket(bucket)
-                                .object(objectName)
-                                .stream(
-            in, file.getSize(), -1
-            )
-            .contentType(file.getContentType())
-            .build()*/
 
 }

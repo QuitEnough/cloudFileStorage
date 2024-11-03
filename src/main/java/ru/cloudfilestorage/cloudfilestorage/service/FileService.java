@@ -11,6 +11,6 @@ public interface FileService {
 
     void delete(Long fileId);
 
-    Optional<File> download(Long fileId);
+    MultipartFile download(Long fileId);
 
 }
