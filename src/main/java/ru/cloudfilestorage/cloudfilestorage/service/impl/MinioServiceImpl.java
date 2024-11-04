@@ -1,21 +1,19 @@
 package ru.cloudfilestorage.cloudfilestorage.service.impl;
 
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
+import io.minio.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import ru.cloudfilestorage.cloudfilestorage.exception.BaseException;
 import ru.cloudfilestorage.cloudfilestorage.repository.FileRepository;
 import ru.cloudfilestorage.cloudfilestorage.service.MinioService;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.nio.file.Files;
+import java.io.OutputStream;
 import java.util.UUID;
 
 @Service
@@ -61,9 +59,17 @@ public class MinioServiceImpl implements MinioService {
     }
 
     @Override
-    public MultipartFile find(UUID uuid) {
-        fileRepository.findByUuid(uuid); //возвращает мой класс File. есть ощущение, что нарушена логика
-        return null;
+    public InputStream find(UUID uuid) {
+        try {
+            return minioClient.getObject(
+                    GetObjectArgs
+                            .builder()
+                            .bucket(bucket)
+                            .object(uuid.toString())
+                            .build());
+        } catch (Exception e) {
+            throw new BaseException("Unable to download");
+        }
     }
 
 }

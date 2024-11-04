@@ -9,6 +9,7 @@ import ru.cloudfilestorage.cloudfilestorage.repository.DirectoryRepository;
 import ru.cloudfilestorage.cloudfilestorage.repository.FileRepository;
 import ru.cloudfilestorage.cloudfilestorage.service.FileService;
 
+import java.io.InputStream;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,7 +37,6 @@ public class FileServiceImpl implements FileService {
                 .build();
 
         fileRepository.save(file);
-        minioService.save(uuid, multipartFile);
 
         return true;
     }
@@ -47,7 +47,13 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public MultipartFile download(Long fileId) {
+    public UUID find(Long fileId) {
+        File file = fileRepository.findById(fileId).get();
+        return file.getUuid();
+    }
+
+    @Override
+    public InputStream download(Long fileId) {
         File file = fileRepository.findById(fileId).get();
         return minioService.find(file.getUuid());
     }

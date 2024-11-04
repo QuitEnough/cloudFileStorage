@@ -1,21 +1,24 @@
 package ru.cloudfilestorage.cloudfilestorage.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.cloudfilestorage.cloudfilestorage.exception.BaseException;
 import ru.cloudfilestorage.cloudfilestorage.service.MinioService;
 import ru.cloudfilestorage.cloudfilestorage.service.impl.FileServiceImpl;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 /**
  * если не будет работать метод контроллера findFile --> попробовать с потоком
  *          ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
  *          byteArrayOutputStream.write(minioService.find(null).getBytes());
+ *          return minioService.find(null);
  */
 @RestController
 public class FileController {
@@ -25,7 +28,7 @@ public class FileController {
     private MinioService minioService;
 
     @PostMapping("upload")
-    public ResponseEntity<Void> upload(@RequestParam("name") String name,
+    public ResponseEntity<Void> uploadFile(@RequestParam("name") String name,
                                        @RequestParam("file") MultipartFile file,
                                        @RequestParam("directory_id") Long directoryId) {
         fileService.save(name, file, directoryId);
@@ -34,9 +37,21 @@ public class FileController {
     }
 
     @GetMapping("/find")
-    public MultipartFile findFile(@RequestParam("fileId") Long fileId) { //погуглить, нужно открывать поток
-        return fileService.download(fileId);
-        //return minioService.find(null);
+    public void findFile(@RequestParam("fileId") Long fileId, HttpServletResponse response) {
+        try (InputStream stream = fileService.download(fileId)) {
+            response.setHeader("Content-Disposition", "attachment");
+            response.setStatus(HttpServletResponse.SC_OK);
+            FileCopyUtils.copy(stream, response.getOutputStream());
+        } catch (IOException e) {
+            throw new BaseException("Unable to download file");
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteFile(@RequestParam("id") Long fileId) {
+        fileService.delete(fileId);
+        minioService.delete(fileService.find(fileId));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

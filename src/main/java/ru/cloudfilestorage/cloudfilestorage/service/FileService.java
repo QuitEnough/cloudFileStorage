@@ -3,7 +3,9 @@ package ru.cloudfilestorage.cloudfilestorage.service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.File;
 
+import java.io.InputStream;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface FileService {
 
@@ -11,6 +13,8 @@ public interface FileService {
 
     void delete(Long fileId);
 
-    MultipartFile download(Long fileId);
+    UUID find(Long fileId);
+
+    InputStream download(Long fileId);
 
 }

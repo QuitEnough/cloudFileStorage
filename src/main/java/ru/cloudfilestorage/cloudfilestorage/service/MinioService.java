@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 public interface MinioService {
@@ -12,6 +13,6 @@ public interface MinioService {
 
     void delete(UUID uuid);
 
-    MultipartFile find(UUID uuid);
+    InputStream find(UUID uuid);
 
 }
