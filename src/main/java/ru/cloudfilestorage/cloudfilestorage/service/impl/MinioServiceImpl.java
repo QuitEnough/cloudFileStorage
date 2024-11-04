@@ -1,19 +1,19 @@
 package ru.cloudfilestorage.cloudfilestorage.service.impl;
 
-import io.minio.*;
+import io.minio.GetObjectArgs;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import ru.cloudfilestorage.cloudfilestorage.exception.BaseException;
 import ru.cloudfilestorage.cloudfilestorage.repository.FileRepository;
 import ru.cloudfilestorage.cloudfilestorage.service.MinioService;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.UUID;
 
 @Service

@@ -10,7 +10,6 @@ import ru.cloudfilestorage.cloudfilestorage.repository.FileRepository;
 import ru.cloudfilestorage.cloudfilestorage.service.FileService;
 
 import java.io.InputStream;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
