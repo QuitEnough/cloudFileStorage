@@ -42,7 +42,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void delete(Long fileId) {
-        fileRepository.delete(fileId);
+        fileRepository.deleteById(fileId);
     }
 
     @Override
