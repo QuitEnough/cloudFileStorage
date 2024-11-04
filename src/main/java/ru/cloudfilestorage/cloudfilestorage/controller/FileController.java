@@ -21,13 +21,14 @@ import java.util.UUID;
  *          return minioService.find(null);
  */
 @RestController
+@RequestMapping("/files")
 public class FileController {
 
     private FileServiceImpl fileService;
 
     private MinioService minioService;
 
-    @PostMapping("upload")
+    @PostMapping("/upload")
     public ResponseEntity<Void> uploadFile(@RequestParam("name") String name,
                                        @RequestParam("file") MultipartFile file,
                                        @RequestParam("directory_id") Long directoryId) {

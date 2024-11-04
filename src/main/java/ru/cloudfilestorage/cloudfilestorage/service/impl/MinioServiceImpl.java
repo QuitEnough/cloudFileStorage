@@ -20,7 +20,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MinioServiceImpl implements MinioService {
 
-    @Value("${spring.minio.bucket}")
+//    @Value("${spring.minio.bucket}")
+    @Value("files-bucket")
     private String bucket;
 
     private final FileRepository fileRepository;
