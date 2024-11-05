@@ -4,6 +4,7 @@ import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,16 +18,21 @@ import java.io.InputStream;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
+//@AllArgsConstructor
 public class MinioServiceImpl implements MinioService {
 
 //    @Value("${spring.minio.bucket}")
-    @Value("files-bucket")
-    private String bucket;
+    private final String bucket;
 
     private final FileRepository fileRepository;
 
-    private MinioClient minioClient;
+    private final MinioClient minioClient;
+
+    public MinioServiceImpl(@Value("files-bucket") String bucket, FileRepository fileRepository, MinioClient minioClient) {
+        this.bucket = bucket;
+        this.fileRepository = fileRepository;
+        this.minioClient = minioClient;
+    }
 
     @Override
     public boolean save(UUID uuid, MultipartFile multipartFile) {
@@ -40,7 +46,7 @@ public class MinioServiceImpl implements MinioService {
                             .object(uuid.toString())
                             .build());
         } catch (Exception e) {
-            throw new BaseException("Unable to delete file");
+            throw new BaseException("Unable to save file", e);
         }
         return true;
     }

@@ -29,8 +29,4 @@ public class User {
     @Column(name = "ROLE")
     private Role role;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(inverseJoinColumns = @JoinColumn(name = "FILE_ID"))
-    private List<Directory> directories;
-
 }

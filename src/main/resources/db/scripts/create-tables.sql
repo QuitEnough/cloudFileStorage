@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE IF NOT EXISTS users
 (
     id       BIGSERIAL PRIMARY KEY NOT NULL,
@@ -20,8 +22,8 @@ CREATE TABLE IF NOT EXISTS files
     id BIGSERIAL PRIMARY KEY NOT NULL,
     name VARCHAR(200) NOT NULL,
     extension VARCHAR(200) NOT NULL,
-    uuid  UUID NOT NULL,
-    directory_id BIGSERIAL REFERENCES directories(id),
+    uuid  UUID DEFAULT uuid_generate_v4() NOT NULL,
+    directory_id BIGINT REFERENCES directories(id),
     UNIQUE (name, extension)
 );
 

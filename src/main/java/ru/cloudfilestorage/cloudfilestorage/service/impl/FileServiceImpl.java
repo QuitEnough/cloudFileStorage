@@ -16,27 +16,26 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
 
-    private FileRepository fileRepository;
+    private final FileRepository fileRepository;
 
-    private DirectoryRepository directoryRepository;
+    private final DirectoryRepository directoryRepository;
 
-    private MinioServiceImpl minioService;
+    private final MinioServiceImpl minioService;
 
     @Override
     public boolean save(String name, MultipartFile multipartFile, Long directoryId) {
-        String[] fileName = StringUtils.splitByWholeSeparator(name, "\\.");
-        UUID uuid = UUID.fromString(name);
+        UUID uuid = UUID.randomUUID();
 
         File file = File
                 .builder()
-                .name(fileName[0])
-                .extension(fileName[1])
+                .name(name)
+                .extension(name)
                 .uuid(uuid)
-                .directoryId(directoryId)
+//                .directoryId(directoryId)
                 .build();
 
         fileRepository.save(file);
-
+        minioService.save(uuid, multipartFile);
         return true;
     }
 

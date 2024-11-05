@@ -1,6 +1,8 @@
 package ru.cloudfilestorage.cloudfilestorage.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
@@ -22,6 +24,7 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping("/files")
+@AllArgsConstructor
 public class FileController {
 
     private FileServiceImpl fileService;
