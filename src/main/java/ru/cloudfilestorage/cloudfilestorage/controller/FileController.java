@@ -8,9 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.cloudfilestorage.cloudfilestorage.domain.entity.File;
 import ru.cloudfilestorage.cloudfilestorage.exception.DownloadFileException;
 import ru.cloudfilestorage.cloudfilestorage.service.MinioService;
 import ru.cloudfilestorage.cloudfilestorage.service.impl.FileServiceImpl;
+import ru.cloudfilestorage.cloudfilestorage.service.impl.MinioServiceImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,10 +30,10 @@ public class FileController {
 
     private final FileServiceImpl fileService;
 
-    private final MinioService minioService;
+    private final MinioServiceImpl minioService;
 
     @Autowired
-    public FileController(FileServiceImpl fileService, MinioService minioService) {
+    public FileController(FileServiceImpl fileService, MinioServiceImpl minioService) {
         this.fileService = fileService;
         this.minioService = minioService;
     }
@@ -40,8 +42,9 @@ public class FileController {
     public ResponseEntity<Void> uploadFile(@RequestParam("name") String name,
                                        @RequestParam("file") @NotNull(message = "File must be not null") MultipartFile file,
                                        @RequestParam("directory_id") Long directoryId) {
-        fileService.save(name, directoryId);
-        minioService.save(UUID.fromString(name), file);
+        long fileId = fileService.save(name, directoryId);
+        UUID uuid = fileService.find(fileId);
+        minioService.save(uuid, file);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
@@ -58,8 +61,8 @@ public class FileController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteFile(@RequestParam("id") Long fileId) {
-        fileService.delete(fileId);
         minioService.delete(fileService.find(fileId));
+        fileService.delete(fileId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
