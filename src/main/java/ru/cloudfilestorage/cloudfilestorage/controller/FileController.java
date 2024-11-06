@@ -1,14 +1,14 @@
 package ru.cloudfilestorage.cloudfilestorage.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.cloudfilestorage.cloudfilestorage.exception.BaseException;
+import ru.cloudfilestorage.cloudfilestorage.exception.DownloadFileException;
 import ru.cloudfilestorage.cloudfilestorage.service.MinioService;
 import ru.cloudfilestorage.cloudfilestorage.service.impl.FileServiceImpl;
 
@@ -24,18 +24,23 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping("/files")
-@AllArgsConstructor
 public class FileController {
 
-    private FileServiceImpl fileService;
+    private final FileServiceImpl fileService;
 
-    private MinioService minioService;
+    private final MinioService minioService;
+
+    @Autowired
+    public FileController(FileServiceImpl fileService, MinioService minioService) {
+        this.fileService = fileService;
+        this.minioService = minioService;
+    }
 
     @PostMapping("/upload")
     public ResponseEntity<Void> uploadFile(@RequestParam("name") String name,
-                                       @RequestParam("file") MultipartFile file,
+                                       @RequestParam("file") @NotNull(message = "File must be not null") MultipartFile file,
                                        @RequestParam("directory_id") Long directoryId) {
-        fileService.save(name, file, directoryId);
+        fileService.save(name, directoryId);
         minioService.save(UUID.fromString(name), file);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
@@ -47,7 +52,7 @@ public class FileController {
             response.setStatus(HttpServletResponse.SC_OK);
             FileCopyUtils.copy(stream, response.getOutputStream());
         } catch (IOException e) {
-            throw new BaseException("Unable to download file");
+            throw new DownloadFileException(e.getMessage());
         }
     }
 

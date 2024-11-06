@@ -4,13 +4,14 @@ import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.cloudfilestorage.cloudfilestorage.exception.BaseException;
-import ru.cloudfilestorage.cloudfilestorage.repository.FileRepository;
+import ru.cloudfilestorage.cloudfilestorage.exception.DeleteFileException;
+import ru.cloudfilestorage.cloudfilestorage.exception.DownloadFileException;
+import ru.cloudfilestorage.cloudfilestorage.exception.SaveFileException;
 import ru.cloudfilestorage.cloudfilestorage.service.MinioService;
 
 import java.io.ByteArrayInputStream;
@@ -18,19 +19,15 @@ import java.io.InputStream;
 import java.util.UUID;
 
 @Service
-//@AllArgsConstructor
 public class MinioServiceImpl implements MinioService {
 
-//    @Value("${spring.minio.bucket}")
     private final String bucket;
-
-    private final FileRepository fileRepository;
 
     private final MinioClient minioClient;
 
-    public MinioServiceImpl(@Value("files-bucket") String bucket, FileRepository fileRepository, MinioClient minioClient) {
+    @Autowired
+    public MinioServiceImpl(@Value("${spring.minio.bucket}") String bucket, MinioClient minioClient) {
         this.bucket = bucket;
-        this.fileRepository = fileRepository;
         this.minioClient = minioClient;
     }
 
@@ -46,7 +43,7 @@ public class MinioServiceImpl implements MinioService {
                             .object(uuid.toString())
                             .build());
         } catch (Exception e) {
-            throw new BaseException("Unable to save file", e);
+            throw new SaveFileException("Unable to save file", e);
         }
         return true;
     }
@@ -61,7 +58,7 @@ public class MinioServiceImpl implements MinioService {
                             .object(uuid.toString())
                             .build());
         } catch (Exception e) {
-            throw new BaseException("Unable to delete file");
+            throw new DeleteFileException("Unable to delete file", e);
         }
     }
 
@@ -75,7 +72,7 @@ public class MinioServiceImpl implements MinioService {
                             .object(uuid.toString())
                             .build());
         } catch (Exception e) {
-            throw new BaseException("Unable to download");
+            throw new DownloadFileException("Unable to download", e);
         }
     }
 

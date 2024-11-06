@@ -4,8 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserCreateRequest;
-import ru.cloudfilestorage.cloudfilestorage.domain.entity.User;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserResponse;
+import ru.cloudfilestorage.cloudfilestorage.domain.entity.User;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.UserDetailsImpl;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)

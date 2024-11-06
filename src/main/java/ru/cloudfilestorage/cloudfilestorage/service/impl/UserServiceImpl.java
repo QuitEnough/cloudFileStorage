@@ -1,6 +1,6 @@
 package ru.cloudfilestorage.cloudfilestorage.service.impl;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,12 +10,11 @@ import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserResponse;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.Role;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.User;
 import ru.cloudfilestorage.cloudfilestorage.domain.mapper.UserMapper;
-import ru.cloudfilestorage.cloudfilestorage.exception.BaseException;
+import ru.cloudfilestorage.cloudfilestorage.exception.UserNotFoundException;
 import ru.cloudfilestorage.cloudfilestorage.repository.UserRepository;
 import ru.cloudfilestorage.cloudfilestorage.service.UserService;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -23,6 +22,13 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     private final PasswordEncoder encoder;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder encoder) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        this.encoder = encoder;
+    }
 
     @Override
     public void addUser(UserCreateRequest request) {
@@ -36,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getUserById(long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException("User with given id not found"));
+                .orElseThrow(() -> new UserNotFoundException("User with given id not found"));
 
         return userMapper.toUserResponse(user);
     }
@@ -44,13 +50,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User with given email is not found"));
+                .orElseThrow(() -> new UserNotFoundException("User with given email is not found"));
 
         return userMapper.toUserDetails(user);
     }
 
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new BaseException("User with given email is not found"));
+                .orElseThrow(() -> new UserNotFoundException("User with given email is not found"));
     }
 }

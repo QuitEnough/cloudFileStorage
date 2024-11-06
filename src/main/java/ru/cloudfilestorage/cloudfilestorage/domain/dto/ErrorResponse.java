@@ -1,9 +1,8 @@
 package ru.cloudfilestorage.cloudfilestorage.domain.dto;
 
-import lombok.*;
+import lombok.Getter;
 
 @Getter
-
 public class ErrorResponse {
 
     private int statusCode;

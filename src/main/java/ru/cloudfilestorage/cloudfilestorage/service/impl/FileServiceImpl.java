@@ -1,11 +1,8 @@
 package ru.cloudfilestorage.cloudfilestorage.service.impl;
 
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.File;
-import ru.cloudfilestorage.cloudfilestorage.repository.DirectoryRepository;
 import ru.cloudfilestorage.cloudfilestorage.repository.FileRepository;
 import ru.cloudfilestorage.cloudfilestorage.service.FileService;
 
@@ -13,30 +10,31 @@ import java.io.InputStream;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
 
     private final FileRepository fileRepository;
 
-    private final DirectoryRepository directoryRepository;
-
     private final MinioServiceImpl minioService;
 
+    @Autowired
+    public FileServiceImpl(FileRepository fileRepository, MinioServiceImpl minioService) {
+        this.fileRepository = fileRepository;
+        this.minioService = minioService;
+    }
+
     @Override
-    public boolean save(String name, MultipartFile multipartFile, Long directoryId) {
+    public Long save(String name, Long directoryId) {
         UUID uuid = UUID.randomUUID();
 
         File file = File
                 .builder()
                 .name(name)
-                .extension(name)
                 .uuid(uuid)
 //                .directoryId(directoryId)
                 .build();
 
         fileRepository.save(file);
-        minioService.save(uuid, multipartFile);
-        return true;
+        return file.getId();
     }
 
     @Override

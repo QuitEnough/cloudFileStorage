@@ -21,9 +21,6 @@ public class File {
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "EXTENSION")
-    private String extension;
-
     @Column(name = "UUID")
     private UUID uuid;
 
