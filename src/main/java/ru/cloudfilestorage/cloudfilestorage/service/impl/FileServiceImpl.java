@@ -23,7 +23,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public Long save(String name, Long directoryId) {
+    public Long save(String name, Long directoryId, Long userId) {
         UUID uuid = UUID.randomUUID();
 
         File file = File
@@ -31,6 +31,7 @@ public class FileServiceImpl implements FileService {
                 .name(name)
                 .uuid(uuid)
 //                .directoryId(directoryId)
+//                .userId(userId)
                 .build();
 
         fileRepository.save(file);

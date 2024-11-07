@@ -27,4 +27,7 @@ public class File {
     @Column(name = "DIRECTORY_ID")
     private Long directoryId;
 
+    @Column(name = "USER_ID")
+    private Long userId;
+
 }

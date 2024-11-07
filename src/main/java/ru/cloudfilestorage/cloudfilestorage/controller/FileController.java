@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,15 +34,17 @@ public class FileController {
     @PostMapping("/upload")
     public ResponseEntity<Void> uploadFile(@RequestParam("name") String name,
                                        @RequestParam("file") @NotNull(message = "File must be not null") MultipartFile file,
-                                       @RequestParam("directory_id") Long directoryId) {
+                                       @RequestParam("directory_id") Long directoryId,
+                                       @RequestParam("user_id") Long userId) {
 
-        long fileId = fileService.save(name, directoryId);
+        long fileId = fileService.save(name, directoryId, userId);
         UUID uuid = fileService.find(fileId);
         minioService.save(uuid, file);
         return new ResponseEntity<>(HttpStatus.PROCESSING);
     }
 
     @GetMapping("/find")
+    @PreAuthorize("@cse.canAccessFile(#fileId)")
     public void findFile(@RequestParam("fileId") Long fileId, HttpServletResponse response) {
         try (InputStream stream = fileService.download(fileId)) {
             response.setHeader("Content-Disposition", "attachment");
@@ -53,6 +56,7 @@ public class FileController {
     }
 
     @DeleteMapping("/delete")
+    @PreAuthorize("@cse.canAccessFile(#fileId)")
     public ResponseEntity<Void> deleteFile(@RequestParam("id") Long fileId) {
         minioService.delete(fileService.find(fileId));
         fileService.delete(fileId);

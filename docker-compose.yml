@@ -20,6 +20,8 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
+      MINIO_URL: ${MINIO_URL}
+      MINIO_PORT: ${MINIO_PORT}
     depends_on:
       - db
 
@@ -50,6 +52,8 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
+      MINIO_URL: ${MINIO_URL}
+      MINIO_PORT: ${MINIO_PORT}
     volumes:
       - minio-storage:/data
     healthcheck:

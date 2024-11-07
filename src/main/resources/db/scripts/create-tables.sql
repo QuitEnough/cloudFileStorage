@@ -22,5 +22,6 @@ CREATE TABLE IF NOT EXISTS files
     id BIGSERIAL PRIMARY KEY NOT NULL,
     name VARCHAR(200) NOT NULL UNIQUE,
     uuid  UUID DEFAULT uuid_generate_v4() NOT NULL,
-    directory_id BIGINT REFERENCES directories(id)
+    directory_id BIGINT REFERENCES directories(id),
+    user_id BIGINT REFERENCES users(id)
 );
