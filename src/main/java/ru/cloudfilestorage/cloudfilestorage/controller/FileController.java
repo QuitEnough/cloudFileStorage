@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.cloudfilestorage.cloudfilestorage.exception.DownloadFileException;
+import ru.cloudfilestorage.cloudfilestorage.exception.FileActionException;
 import ru.cloudfilestorage.cloudfilestorage.service.impl.FileServiceImpl;
 import ru.cloudfilestorage.cloudfilestorage.service.impl.MinioServiceImpl;
 
@@ -16,12 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-/**
- * если не будет работать метод контроллера findFile --> попробовать с потоком
- *          ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
- *          byteArrayOutputStream.write(minioService.find(null).getBytes());
- *          return minioService.find(null);
- */
 @RestController
 @RequestMapping("/files")
 public class FileController {
@@ -40,10 +34,11 @@ public class FileController {
     public ResponseEntity<Void> uploadFile(@RequestParam("name") String name,
                                        @RequestParam("file") @NotNull(message = "File must be not null") MultipartFile file,
                                        @RequestParam("directory_id") Long directoryId) {
+
         long fileId = fileService.save(name, directoryId);
         UUID uuid = fileService.find(fileId);
         minioService.save(uuid, file);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.PROCESSING);
     }
 
     @GetMapping("/find")
@@ -53,7 +48,7 @@ public class FileController {
             response.setStatus(HttpServletResponse.SC_OK);
             FileCopyUtils.copy(stream, response.getOutputStream());
         } catch (IOException e) {
-            throw new DownloadFileException(e.getMessage());
+            throw new FileActionException(e.getMessage());
         }
     }
 

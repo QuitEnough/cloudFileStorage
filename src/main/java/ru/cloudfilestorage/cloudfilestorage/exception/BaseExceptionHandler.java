@@ -39,24 +39,8 @@ public class BaseExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(errorResponse.getStatusCode()));
     }
 
-    @ExceptionHandler(DeleteFileException.class)
-    public final ResponseEntity<ErrorResponse> handleDeleteFileException(DeleteFileException ex) {
-        log.error(ex.getMessage(), ex);
-
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(errorResponse.getStatusCode()));
-    }
-
-    @ExceptionHandler(SaveFileException.class)
-    public final ResponseEntity<ErrorResponse> handleSaveFileException(SaveFileException ex) {
-        log.error(ex.getMessage(), ex);
-
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(errorResponse.getStatusCode()));
-    }
-
-    @ExceptionHandler({DownloadFileException.class})
-    public ResponseEntity<ErrorResponse> handleDownloadFileException(DownloadFileException ex) {
+    @ExceptionHandler(FileActionException.class)
+    public final ResponseEntity<ErrorResponse> handleFileActionException(FileActionException ex) {
         log.error(ex.getMessage(), ex);
 
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());

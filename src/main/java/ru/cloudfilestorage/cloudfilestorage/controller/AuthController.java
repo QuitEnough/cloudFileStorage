@@ -38,6 +38,7 @@ public class AuthController {
                           UserDetailsService userDetailsService,
                           JwtService tokenService,
                           UserServiceImpl userService) {
+
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.tokenService = tokenService;

@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.cloudfilestorage.cloudfilestorage.exception.BaseException;
-import ru.cloudfilestorage.cloudfilestorage.exception.DeleteFileException;
-import ru.cloudfilestorage.cloudfilestorage.exception.DownloadFileException;
-import ru.cloudfilestorage.cloudfilestorage.exception.SaveFileException;
+import ru.cloudfilestorage.cloudfilestorage.exception.FileActionException;
 import ru.cloudfilestorage.cloudfilestorage.service.MinioService;
 
 import java.io.ByteArrayInputStream;
@@ -43,7 +40,7 @@ public class MinioServiceImpl implements MinioService {
                             .object(uuid.toString())
                             .build());
         } catch (Exception e) {
-            throw new SaveFileException("Unable to save file", e);
+            throw new FileActionException("Unable to save file", e);
         }
         return true;
     }
@@ -58,7 +55,7 @@ public class MinioServiceImpl implements MinioService {
                             .object(uuid.toString())
                             .build());
         } catch (Exception e) {
-            throw new DeleteFileException("Unable to delete file", e);
+            throw new FileActionException("Unable to delete file", e);
         }
     }
 
@@ -72,7 +69,7 @@ public class MinioServiceImpl implements MinioService {
                             .object(uuid.toString())
                             .build());
         } catch (Exception e) {
-            throw new DownloadFileException("Unable to download", e);
+            throw new FileActionException("Unable to download", e);
         }
     }
 
