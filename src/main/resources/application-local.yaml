@@ -27,6 +27,12 @@ spring:
     access-key: ${MINIO_ACCESS_KEY}
     secret-key: ${MINIO_SECRET_KEY}
     port: ${MINIO_PORT}
+
 token:
   signing:
     key: ${TOKEN_SIGNING_KEY}
+
+logging:
+  level:
+    org.springframework:
+      web: DEBUG

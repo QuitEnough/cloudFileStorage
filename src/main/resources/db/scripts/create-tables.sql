@@ -12,8 +12,8 @@ CREATE TABLE IF NOT EXISTS directories
 (
     id    BIGSERIAL PRIMARY KEY NOT NULL,
     name VARCHAR(200)          NOT NULL,
-    user_id BIGSERIAL REFERENCES users(id),
-    parent_id BIGSERIAL REFERENCES directories(id),
+    user_id BIGINT REFERENCES users(id),
+    parent_id BIGINT REFERENCES directories(id),
     UNIQUE (id, user_id, parent_id)
 );
 

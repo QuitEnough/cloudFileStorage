@@ -3,6 +3,7 @@ package ru.cloudfilestorage.cloudfilestorage.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.File;
+import ru.cloudfilestorage.cloudfilestorage.repository.DirectoryRepository;
 import ru.cloudfilestorage.cloudfilestorage.repository.FileRepository;
 import ru.cloudfilestorage.cloudfilestorage.service.FileService;
 
@@ -14,11 +15,16 @@ public class FileServiceImpl implements FileService {
 
     private final FileRepository fileRepository;
 
+    private final DirectoryRepository directoryRepository;
+
     private final MinioServiceImpl minioService;
 
-    @Autowired
-    public FileServiceImpl(FileRepository fileRepository, MinioServiceImpl minioService) {
+    public FileServiceImpl(FileRepository fileRepository,
+                           DirectoryRepository directoryRepository,
+                           MinioServiceImpl minioService) {
+
         this.fileRepository = fileRepository;
+        this.directoryRepository = directoryRepository;
         this.minioService = minioService;
     }
 
@@ -30,8 +36,8 @@ public class FileServiceImpl implements FileService {
                 .builder()
                 .name(name)
                 .uuid(uuid)
-//                .directoryId(directoryId)
-//                .userId(userId)
+                .directoryId(directoryId)
+                .userId(userId)
                 .build();
 
         fileRepository.save(file);

@@ -6,9 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.cloudfilestorage.cloudfilestorage.domain.entity.UserDetailsImpl;
 import ru.cloudfilestorage.cloudfilestorage.exception.FileActionException;
 import ru.cloudfilestorage.cloudfilestorage.service.impl.FileServiceImpl;
 import ru.cloudfilestorage.cloudfilestorage.service.impl.MinioServiceImpl;
@@ -33,14 +37,16 @@ public class FileController {
 
     @PostMapping("/upload")
     public ResponseEntity<Void> uploadFile(@RequestParam("name") String name,
-                                       @RequestParam("file") @NotNull(message = "File must be not null") MultipartFile file,
-                                       @RequestParam("directory_id") Long directoryId,
-                                       @RequestParam("user_id") Long userId) {
+                                           @RequestParam("file") @NotNull(message = "File must be not null") MultipartFile file,
+                                           @RequestParam(name = "directory_id", required = false) Long directoryId) {
 
-        long fileId = fileService.save(name, directoryId, userId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        var user = (UserDetailsImpl) authentication.getPrincipal();
+
+        long fileId = fileService.save(name, directoryId, user.getId());
         UUID uuid = fileService.find(fileId);
         minioService.save(uuid, file);
-        return new ResponseEntity<>(HttpStatus.PROCESSING);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/find")
