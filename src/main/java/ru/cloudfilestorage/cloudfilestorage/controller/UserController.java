@@ -1,5 +1,7 @@
 package ru.cloudfilestorage.cloudfilestorage.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import ru.cloudfilestorage.cloudfilestorage.service.impl.UserServiceImpl;
 
 @RestController
 @RequestMapping("/users")
+@Tag(name = "User Controller", description = "User API")
 public class UserController {
 
     private final UserServiceImpl userService;
@@ -21,19 +24,15 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<Void> addUser(@RequestBody @Valid UserCreateRequest userRequest) {
-        userService.addUser(userRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
     @GetMapping(value = "/{id}", produces = "application/json")
+    @Operation(summary = "Get User by Id")
     public UserResponse getUserById(@PathVariable("id") Long userId) {
         return userService.getUserById(userId);
     }
 
     @GetMapping(value = "/byEmail/{email}", produces = "application/json")
-    public User getUserByEmail(@PathVariable String email) {
+    @Operation(summary = "Get User by Email")
+    public UserResponse getUserByEmail(@PathVariable String email) {
         return userService.getUserByEmail(email);
     }
 }

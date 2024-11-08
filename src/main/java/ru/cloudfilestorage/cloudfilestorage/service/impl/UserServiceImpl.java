@@ -60,8 +60,10 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserDetails(user);
     }
 
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
+    public UserResponse getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User with given email is not found"));
+
+        return userMapper.toUserResponse(user);
     }
 }

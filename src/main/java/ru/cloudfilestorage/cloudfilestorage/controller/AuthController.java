@@ -22,7 +22,7 @@ import ru.cloudfilestorage.cloudfilestorage.service.impl.UserServiceImpl;
 
 @RestController
 @RequestMapping("/public")
-@Tag(name = "Аутентификация")
+@Tag(name = "Auth Controller", description = "Auth API")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -45,16 +45,16 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @Operation(summary = "Регистрация пользователя")
     @PostMapping("/sign-up")
+    @Operation(summary = "Sign up the user")
     public ResponseEntity<Void> signUp(@RequestBody @Valid UserCreateRequest request) {
         userService.addUser(request);
         return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
 
-    @Operation(summary = "Авторизация пользователя")
     @PostMapping("/auth")
+    @Operation(summary = "Authorization for the user")
     public JwtAuthenticationResponse authenticate(@RequestBody @Valid AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));

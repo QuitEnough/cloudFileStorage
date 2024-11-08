@@ -37,4 +37,5 @@ logging:
     org.springframework:
       web: DEBUG
 
-
+springdoc:
+  override-with-generic-response: false

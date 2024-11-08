@@ -1,5 +1,7 @@
 package ru.cloudfilestorage.cloudfilestorage.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/files")
+@Tag(name = "File Controller", description = "File API")
 public class FileController {
 
     private final FileServiceImpl fileService;
@@ -36,6 +39,7 @@ public class FileController {
     }
 
     @PostMapping("/upload")
+    @Operation(summary = "Upload the File")
     public ResponseEntity<Void> uploadFile(@RequestParam("name") String name,
                                            @RequestParam("file") @NotNull(message = "File must be not null") MultipartFile file,
                                            @RequestParam(name = "directory_id", required = false) Long directoryId) {
@@ -51,6 +55,7 @@ public class FileController {
 
     @GetMapping("/find")
     @PreAuthorize("@cse.canAccessFile(#fileId)")
+    @Operation(summary = "Download the File")
     public void findFile(@RequestParam("fileId") Long fileId, HttpServletResponse response) {
         try (InputStream stream = fileService.download(fileId)) {
             response.setHeader("Content-Disposition", "attachment");
@@ -63,6 +68,7 @@ public class FileController {
 
     @DeleteMapping("/delete")
     @PreAuthorize("@cse.canAccessFile(#fileId)")
+    @Operation(summary = "Delete the File")
     public ResponseEntity<Void> deleteFile(@RequestParam("id") Long fileId) {
         minioService.delete(fileService.find(fileId));
         fileService.delete(fileId);
