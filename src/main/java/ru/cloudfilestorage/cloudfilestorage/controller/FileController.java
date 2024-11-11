@@ -1,6 +1,8 @@
 package ru.cloudfilestorage.cloudfilestorage.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
@@ -39,6 +41,11 @@ public class FileController {
 
     @PostMapping("/upload")
     @Operation(summary = "Upload the File")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "File saved"),
+            @ApiResponse(responseCode = "403", description = "Access denied"),
+            @ApiResponse(responseCode = "500", description = "Can not insert into table")
+    })
     public ResponseEntity<Void> uploadFile(@RequestParam("name") String name,
                                            @RequestParam("file") @NotNull(message = "File must be not null") MultipartFile file,
                                            @RequestParam(name = "directory_id", required = false) Long directoryId) {
@@ -55,6 +62,11 @@ public class FileController {
     @GetMapping("/find")
     @PreAuthorize("@UserAccessor.canUseFile(#fileId)")
     @Operation(summary = "Download the File")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "File achieved"),
+            @ApiResponse(responseCode = "403", description = "Access denied"),
+            @ApiResponse(responseCode = "500", description = "File not found")
+    })
     public void findFile(@RequestParam("fileId") Long fileId, HttpServletResponse response) {
         try (InputStream stream = fileService.download(fileId)) {
             response.setHeader("Content-Disposition", "attachment");
@@ -68,6 +80,11 @@ public class FileController {
     @DeleteMapping("/delete")
     @PreAuthorize("@UserAccessor.canUseFile(#fileId)")
     @Operation(summary = "Delete the File")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "File deleted"),
+            @ApiResponse(responseCode = "403", description = "Access denied"),
+            @ApiResponse(responseCode = "500", description = "File not found")
+    })
     public ResponseEntity<Void> deleteFile(@RequestParam("id") Long fileId) {
         minioService.delete(fileService.find(fileId));
         fileService.delete(fileId);

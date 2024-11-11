@@ -1,6 +1,11 @@
 package ru.cloudfilestorage.cloudfilestorage.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +52,11 @@ public class AuthController {
 
     @PostMapping("/sign-up")
     @Operation(summary = "Sign up the user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User created"),
+            @ApiResponse(responseCode = "400", description = "User null or invalid values"),
+            @ApiResponse(responseCode = "500", description = "User duplicated values")
+    })
     public ResponseEntity<Void> signUp(@RequestBody @Valid UserCreateRequest request) {
         userService.addUser(request);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -55,6 +65,10 @@ public class AuthController {
 
     @PostMapping("/auth")
     @Operation(summary = "Authorization for the user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User authorised"),
+            @ApiResponse(responseCode = "400", description = "User invalid password or login")
+    })
     public JwtAuthenticationResponse authenticate(@RequestBody @Valid AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
