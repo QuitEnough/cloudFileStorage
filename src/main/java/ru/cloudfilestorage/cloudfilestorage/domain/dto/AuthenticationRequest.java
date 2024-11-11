@@ -3,6 +3,7 @@ package ru.cloudfilestorage.cloudfilestorage.domain.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -19,6 +20,7 @@ public class AuthenticationRequest {
     @Schema(description = "Password", example = "S1Pa$$w0")
     @Size(max = 255, message = "Длина пароля не может превышать 8 символов")
     @NotBlank(message = "Пароль не может быть пустым")
+    @Pattern(message = "Пароль недостаточно сильный", regexp = "^(?=.*\\d)(?=.*[A-Z]).{6,8}$")
     private String password;
 
 }

@@ -53,7 +53,7 @@ public class FileController {
     }
 
     @GetMapping("/find")
-    @PreAuthorize("@cse.canAccessFile(#fileId)")
+    @PreAuthorize("@UserAccessor.canUseFile(#fileId)")
     @Operation(summary = "Download the File")
     public void findFile(@RequestParam("fileId") Long fileId, HttpServletResponse response) {
         try (InputStream stream = fileService.download(fileId)) {
@@ -66,7 +66,7 @@ public class FileController {
     }
 
     @DeleteMapping("/delete")
-    @PreAuthorize("@cse.canAccessFile(#fileId)")
+    @PreAuthorize("@UserAccessor.canUseFile(#fileId)")
     @Operation(summary = "Delete the File")
     public ResponseEntity<Void> deleteFile(@RequestParam("id") Long fileId) {
         minioService.delete(fileService.find(fileId));
