@@ -14,6 +14,9 @@ import ru.cloudfilestorage.cloudfilestorage.exception.UserNotFoundException;
 import ru.cloudfilestorage.cloudfilestorage.repository.UserRepository;
 import ru.cloudfilestorage.cloudfilestorage.service.UserService;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -60,10 +63,31 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserDetails(user);
     }
 
+    @Override
     public UserResponse getUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User with given email is not found"));
 
         return userMapper.toUserResponse(user);
     }
+
+    @Override
+    public List<?> getUserByValue(String value) {
+
+        Optional<User> userById = userRepository.findById(Long.getLong(value));
+        Optional<User> userByEmail = userRepository.findByEmail(value);
+
+        if (userById.isPresent()) {
+            User user = userById.get();
+            return List.of(userMapper.toUserResponse(user));
+        }
+
+        if (userByEmail.isPresent()) {
+            User user = userByEmail.get();
+            return List.of(userMapper.toUserResponse(user));
+        } else {
+            return List.of();
+        }
+    }
+
 }

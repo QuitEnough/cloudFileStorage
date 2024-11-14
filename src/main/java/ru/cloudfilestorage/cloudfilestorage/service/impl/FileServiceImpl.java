@@ -1,6 +1,5 @@
 package ru.cloudfilestorage.cloudfilestorage.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.File;
 import ru.cloudfilestorage.cloudfilestorage.repository.DirectoryRepository;
