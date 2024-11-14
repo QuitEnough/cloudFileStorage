@@ -29,9 +29,10 @@ public class UserController {
     @GetMapping("/{value}")
     @Operation(summary = "Get User by Id or Email")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User returned"),
-            @ApiResponse(responseCode = "403", description = "Access denied"),
-            @ApiResponse(responseCode = "500", description = "User not found")
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "403", description = "Authorization is required"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "500", description = "Bad request")
     })
     public List<?> getUserByValue(@PathVariable String value) {
         return List.of(userService.getUserByValue(value));
@@ -40,9 +41,10 @@ public class UserController {
     @GetMapping(value = "/byEmail/{email}", produces = "application/json")
     @Operation(summary = "Get User by Email")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User returned"),
-            @ApiResponse(responseCode = "403", description = "Access denied"),
-            @ApiResponse(responseCode = "500", description = "User not found")
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "403", description = "Authorization is required"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "500", description = "Bad request")
     })
     public UserResponse getUserByEmail(@PathVariable String email) {
         return userService.getUserByEmail(email);
@@ -51,9 +53,10 @@ public class UserController {
     @GetMapping(value = "/{id}", produces = "application/json")
     @Operation(summary = "Get User by Id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User returned"),
-            @ApiResponse(responseCode = "403", description = "Access denied"),
-            @ApiResponse(responseCode = "500", description = "User not found")
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "403", description = "Authorization is required"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "500", description = "Bad request")
     })
     public UserResponse getUserById(@PathVariable("id") Long userId) {
         return userService.getUserById(userId);

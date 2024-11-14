@@ -21,6 +21,6 @@ public class UserCreateRequest {
     @Schema(description = "Password", example = "S1Pa$$w0")
     @Size(max = 255, message = "Длина пароля не может превышать 8 символов")
     @NotBlank(message = "Пароль не может быть пустым")
-    @Pattern(message = "Пароль недостаточно сильный", regexp = "^(?=.*\\d)(?=.*[A-Z]).{6,8}$")
+    @Pattern(message = "Пароль должен быть по длине от 6 до 8 символов с 1 заглавной буквой", regexp = "^(?=.*\\d)(?=.*[A-Z]).{6,8}$")
     private String password;
 }
