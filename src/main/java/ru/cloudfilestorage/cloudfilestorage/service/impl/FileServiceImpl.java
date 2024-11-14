@@ -7,6 +7,8 @@ import ru.cloudfilestorage.cloudfilestorage.repository.FileRepository;
 import ru.cloudfilestorage.cloudfilestorage.service.FileService;
 
 import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -58,6 +60,11 @@ public class FileServiceImpl implements FileService {
     public InputStream download(Long fileId) {
         File file = fileRepository.findById(fileId).get();
         return minioService.find(file.getUuid());
+    }
+
+    @Override
+    public List<File> findAllFilesByUserId(Long userId) {
+        return fileRepository.findFilesByUserId(userId);
     }
 
 }
