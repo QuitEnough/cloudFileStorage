@@ -15,8 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.cloudfilestorage.cloudfilestorage.domain.dto.FileEnvelopResponse;
-import ru.cloudfilestorage.cloudfilestorage.domain.entity.File;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.UserDetailsImpl;
 import ru.cloudfilestorage.cloudfilestorage.exception.FileActionException;
 import ru.cloudfilestorage.cloudfilestorage.service.StructureService;
@@ -26,8 +24,6 @@ import ru.cloudfilestorage.cloudfilestorage.service.impl.MinioServiceImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -55,15 +51,16 @@ public class FileController {
         this.structureService = structureService;
     }
 
-    @GetMapping("/getFiles/{id}")
-    public FileEnvelopResponse getUserFilesView(@PathVariable("id") Long userId) {
-
-        Map<Long, List<File>> structure = structureService.doStructureFiles(
-                fileService.findAllFilesByUserId(userId),
-                directoryService.findDirectoriesByUserId(userId));
-
-        FileEnvelopResponse.generateFileEnvelopResponse(); // еще думаю
-    }
+//    @GetMapping("/getFiles/{id}")
+//    @Operation(summary = "Get all directories and files of certain User")
+//    public FileEnvelopResponse getUserFilesView(@PathVariable("id") Long userId) {
+//
+//        Map<Long, List<File>> structure = structureService.doStructureFiles(
+//                fileService.findAllFilesByUserId(userId),
+//                directoryService.findDirectoriesByUserId(userId));
+//
+//        FileEnvelopResponse.generateFileEnvelopResponse(); // еще думаю
+//    }
 
     @PostMapping("/upload")
     @Operation(summary = "Upload the File")

@@ -66,4 +66,8 @@ public class FileServiceImpl implements FileService {
         return fileRepository.findFilesByUserId(userId);
     }
 
+    public List<File> findAllFilesInCertainDir(Long directoryId) {
+        return fileRepository.findFilesByDirectoryId(directoryId);
+    }
+
 }
