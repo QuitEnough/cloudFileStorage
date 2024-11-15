@@ -22,7 +22,12 @@ public class DirectoryController {
     }
 
     @GetMapping
-    public Node getInfoForDir(@RequestParam("id") Long dirId) {
-        return structureService.getInfoForCertainDir(dirId);
+    public Node getDataForDir(@RequestParam("id") Long dirId) {
+        return structureService.getDataForCertainDir(dirId);
+    }
+
+    @GetMapping("/user")
+    public Node getAllDataForUser(@RequestParam("id") Long userId) {
+        return Node.builder().build();
     }
 }

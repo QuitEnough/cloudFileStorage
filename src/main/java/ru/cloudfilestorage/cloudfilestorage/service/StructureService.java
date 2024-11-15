@@ -11,7 +11,6 @@ import ru.cloudfilestorage.cloudfilestorage.service.impl.DirectoryServiceImpl;
 import ru.cloudfilestorage.cloudfilestorage.service.impl.FileServiceImpl;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class StructureService {
@@ -26,22 +25,7 @@ public class StructureService {
         this.directoryService = directoryService;
     }
 
-    public Map<Long, List<File>> doStructureFiles(List<File> fileList, Set<Directory> directorySet) {
-        Map<Long, List<File>> structuredMap = new HashMap<>();
-
-        structuredMap.put(null,
-                fileList.stream().filter(file -> file.getDirectoryId() == null).toList());
-
-        List<Long> directoryIdList = directorySet.stream().map(Directory::getId).toList();
-        for (Long directoryId : directoryIdList) {
-            structuredMap.put(directoryId,
-                    fileList.stream().filter(file -> file.getDirectoryId().equals(directoryId)).toList());
-        }
-
-        return structuredMap;
-    }
-
-    public Node getInfoForCertainDir(Long directoryId) {
+    public Node getDataForCertainDir(Long directoryId) {
 
         List<Directory> dirs = directoryService.findAllDirectoriesInCertainDir(directoryId);
         List<NodeDir> nodeDirsList = new ArrayList<>();
@@ -75,117 +59,67 @@ public class StructureService {
         return Node.generateNode(nodeDirsList, nodeFileList);
     }
 
-//    public Node getInfoForCertainDir(Long directoryId) {
-//
-//        List<Directory> dirs = directoryService.findAllDirectoriesInCertainDir(directoryId);
-//        List<NodeDir> nodeDirsList = new ArrayList<>();
-//
-//        for (Directory directory : dirs) {
-//            NodeDir nodeDir = NodeDir
-//                    .builder()
-//                    .type("dir")
-//                    .id(directory.getId())
-//                    .name(directory.getName())
-//                    .envelopeDirs(dfsForEnvelopeDirs(dirs, directory))
-//                    .build();
-//            nodeDirsList.add(nodeDir);
-//        }
-//
-//        List<File> files = fileService.findAllFilesInCertainDir(directoryId);
-//        List<NodeFile> nodeFileList = new ArrayList<>();
-//
-//        for (File file : files) {
-//            NodeFile nodeFile = NodeFile
-//                    .builder()
-//                    .type("file")
-//                    .id(file.getId())
-//                    .name(file.getName())
-//                    .uuid(file.getUuid())
-//                    .build();
-//            nodeFileList.add(nodeFile);
-//        }
-//
-//        return Node.generateNode(nodeDirsList, nodeFileList);
-//    }
-//
-//    private List<NodeDir> dfsForEnvelopeDirs(List<Directory> dirsList, Directory directory) {
-//        Stack<NodeDir> stack = new Stack<>();
-//        boolean[] visited = new boolean[dirsList.size()];
-//
-//        NodeDir current = NodeDir
-//                .builder()
-//                .type("dir")
-//                .id(directory.getId())
-//                .name(directory.getName())
-//                .build();
-//
-//        stack.push(current);
-//        while (!stack.isEmpty()) {
-//            current = stack.pop();
-//            if (!)
-//        }
-//
-//        return List.of();
-//    }
-//
-//    private static NodeDir dfs(List<Directory> dirsList, Directory directory) {
-//        dirsList.stream().sorted(Comparator.comparing(Directory::getParentId)).toList();
-//        for (Directory dir : dirsList) {
-//
-//        }
-//        Stack<Directory> stack = new Stack<>();
-//        stack.push(directory);
-//
-//        int maxId = dirsList.stream().filter(dir -> dir.getId() < )
-//        while (!stack.isEmpty()) {
-//            Directory node = stack.pop();
-//        }
-//    }
-//    private static NodeDir bfs(List<Directory> dirsList, Directory directory) {
-//        Queue<NodeDir> queue = new ArrayDeque<>();
-//
-//        int dirsListSize = dirsList.size();
-//        int count = 0;
-//
-//
-//
-//        for (Directory d : dirsList) {
-//            if (d.getParentId() == null) {
-//                NodeDir nodeDir = NodeDir
-//                        .builder()
-//                        .type("dir")
-//                        .id(d.getId())
-//                        .name(d.getName())
-//                        .build();
-//                queue.add(nodeDir);
-//                count++;
-//            }
-//        }
-//        while (!queue.isEmpty()) {
-//            NodeDir nodeDir = queue.remove();
-//            if (count < dirsListSize) {
-//                for (int i = 1; i <= dirsList.size(); i++) {
-//
-//                }
-//            }
-//        }
-//        while (Comparator.comparing(Directory::getParentId) == null) {
-//            Directory rootDir = dirsList.stream().findFirst().get();
-//            NodeDir nodeDir = NodeDir
-//                    .builder()
-//                    .type("dir")
-//                    .id(rootDir.getId())
-//                    .name(rootDir.getName())
-//                    .build();
-//            queue.add(nodeDir);
-//        }
-//
-//    }
-//
-//    private void bfsForCertainDir(List<Directory> dirsList, Long dirId) {
-//        for (Directory d : dirsList) {
-//            List<Directory> dirsForId = dirsList.stream().filter(dir -> dir.getParentId().equals(dirId)).toList();
-//        }
-//    }
+    public List<Node> getAllDataForUser(Long userId) {
+
+        List<NodeDir> all = directoryService.findDirectoriesByUserId(userId)
+                .stream()
+                .map(e -> NodeDir
+                        .builder()
+                        .type("dir")
+                        .id(e.getId())
+                        .name(e.getName())
+                        .build())
+                .toList();
+
+        List<NodeDir> rootList = new LinkedList<>();
+        List<NodeDir> currentList = new LinkedList<>();
+        List<NodeDir> nextList = new LinkedList<>();
+
+        for (Directory d : all) {
+            if (d.getParentId() == null) {
+                currentList.add(d);
+                all.remove(d);
+            }
+        }
+        for (int i = 0; i < currentList.size(); i++) {
+            NodeDir nodeDir = NodeDir
+                    .builder()
+                    .type("dir")
+                    .id(currentList.get(i).getId())
+//                    .envelopeDirs()   --- как вставить лист, если я еще не знаю значений
+                    .build();
+        }
+        List<Node> nodeList = new LinkedList<>();
+
+        long maxRef = all
+                .stream()
+                .max(Comparator.comparing(Directory::getParentId))
+                .get()
+                .getParentId();
+        for (int i = 1; i <= maxRef; i++) {
+            for (Directory d : all) {
+                if (d.getParentId().equals(1L)) {
+                    currentList.add(d);
+                }
+            }
+        }
+
+        int count = all.size();
+        for (Directory d : all) {
+            for (int i = 1; i <= all.size(); i++) {
+
+            }
+        }
+
+        return List.of();
+    }
+
+    private List<NodeDir> bfs(List<Directory> dirs) {
+        for (int i = 0; i < dirs.size(); i++) {
+            long minParentId = dirs.stream().min(Comparator.comparing(Directory::getParentId)).get().getParentId();
+
+        }
+        return List.of();
+    }
 
 }

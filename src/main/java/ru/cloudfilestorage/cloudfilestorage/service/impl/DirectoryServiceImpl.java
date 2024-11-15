@@ -7,7 +7,6 @@ import ru.cloudfilestorage.cloudfilestorage.repository.DirectoryRepository;
 import ru.cloudfilestorage.cloudfilestorage.service.DirectoryService;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class DirectoryServiceImpl implements DirectoryService {
@@ -23,7 +22,7 @@ public class DirectoryServiceImpl implements DirectoryService {
     }
 
     @Override
-    public Set<Directory> findDirectoriesByUserId(Long userId) {
+    public List<Directory> findDirectoriesByUserId(Long userId) {
         return directoryRepository.findDirectoriesByUserId(userId);
     }
 

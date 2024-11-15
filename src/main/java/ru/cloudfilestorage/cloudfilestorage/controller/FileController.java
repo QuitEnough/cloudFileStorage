@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.UserDetailsImpl;
 import ru.cloudfilestorage.cloudfilestorage.exception.FileActionException;
-import ru.cloudfilestorage.cloudfilestorage.service.StructureService;
-import ru.cloudfilestorage.cloudfilestorage.service.impl.DirectoryServiceImpl;
 import ru.cloudfilestorage.cloudfilestorage.service.impl.FileServiceImpl;
 import ru.cloudfilestorage.cloudfilestorage.service.impl.MinioServiceImpl;
 
@@ -33,34 +31,15 @@ public class FileController {
 
     private final FileServiceImpl fileService;
 
-    private final DirectoryServiceImpl directoryService;
-
     private final MinioServiceImpl minioService;
-
-    private final StructureService structureService;
 
     @Autowired
     public FileController(FileServiceImpl fileService,
-                          DirectoryServiceImpl directoryService,
-                          MinioServiceImpl minioService,
-                          StructureService structureService) {
+                          MinioServiceImpl minioService) {
 
         this.fileService = fileService;
-        this.directoryService = directoryService;
         this.minioService = minioService;
-        this.structureService = structureService;
     }
-
-//    @GetMapping("/getFiles/{id}")
-//    @Operation(summary = "Get all directories and files of certain User")
-//    public FileEnvelopResponse getUserFilesView(@PathVariable("id") Long userId) {
-//
-//        Map<Long, List<File>> structure = structureService.doStructureFiles(
-//                fileService.findAllFilesByUserId(userId),
-//                directoryService.findDirectoriesByUserId(userId));
-//
-//        FileEnvelopResponse.generateFileEnvelopResponse(); // еще думаю
-//    }
 
     @PostMapping("/upload")
     @Operation(summary = "Upload the File")
