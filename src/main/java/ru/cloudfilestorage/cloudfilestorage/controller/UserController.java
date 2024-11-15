@@ -5,11 +5,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserResponse;
+import ru.cloudfilestorage.cloudfilestorage.domain.entity.File;
+import ru.cloudfilestorage.cloudfilestorage.repository.UserRepository;
 import ru.cloudfilestorage.cloudfilestorage.service.impl.UserServiceImpl;
 
 import java.util.List;
@@ -20,10 +19,33 @@ import java.util.List;
 public class UserController {
 
     private final UserServiceImpl userService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserController(UserServiceImpl userService) {
+    public UserController(UserServiceImpl userService,
+                          UserRepository userRepository) {
         this.userService = userService;
+        this.userRepository = userRepository;
+    }
+
+    @GetMapping
+    @Operation(summary = "Get User by Id or Email")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "403", description = "Authorization is required"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "500", description = "Bad request")
+    })
+    public Object getUserByIdOrEmail(@RequestParam(required = false) Long id,
+                                     @RequestParam(required = false) String email) {
+        if (id != null) {
+            return userService.getUserById(id);
+        }
+        if (email != null) {
+            return userService.getUserByEmail(email);
+        }
+
+        return List.of();
     }
 
     @GetMapping("/{value}")
