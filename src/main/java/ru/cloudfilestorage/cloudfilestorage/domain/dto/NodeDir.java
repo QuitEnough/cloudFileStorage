@@ -17,6 +17,7 @@ public class NodeDir {
 
     private Long parentId;
 
-    private List<NodeDir> envelopeDirs;
+    private List<NodeDir> childrenDirs;
 
+    private List<NodeFile> files;
 }

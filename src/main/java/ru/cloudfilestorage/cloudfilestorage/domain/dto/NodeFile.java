@@ -15,6 +15,5 @@ public class NodeFile {
 
     private String name;
 
-    private UUID uuid;
-
+    private Long parentId;
 }

@@ -28,6 +28,6 @@ public class DirectoryController {
 
     @GetMapping("/user")
     public Node getAllDataForUser(@RequestParam("id") Long userId) {
-        return Node.builder().build();
+        return structureService.getEnvelopeDirsForUser(userId);
     }
 }
