@@ -15,6 +15,8 @@ public class NodeDir {
 
     private String name;
 
+    private Long parentId;
+
     private List<NodeDir> envelopeDirs;
 
 }
