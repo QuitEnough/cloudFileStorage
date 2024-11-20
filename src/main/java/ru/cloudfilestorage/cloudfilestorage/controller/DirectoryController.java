@@ -1,5 +1,6 @@
 package ru.cloudfilestorage.cloudfilestorage.controller;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +12,7 @@ import ru.cloudfilestorage.cloudfilestorage.service.StructureService;
 
 @RestController
 @RequestMapping("/directories")
-@Tag(name = "File Controller", description = "File API")
+@Tag(name = "Directory Controller", description = "Directory API")
 public class DirectoryController {
 
     private final StructureService structureService;
