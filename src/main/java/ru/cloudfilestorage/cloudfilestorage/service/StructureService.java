@@ -1,5 +1,6 @@
 package ru.cloudfilestorage.cloudfilestorage.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.Node;
@@ -14,6 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class StructureService {
 
     private final FileServiceImpl fileService;
@@ -88,10 +90,13 @@ public class StructureService {
 
         List<NodeDir> currents = new LinkedList<>(rootList);
         List<NodeDir> next = new LinkedList<>();
+        Iterator<NodeDir> iterator = currents.iterator();
 
         while (!all.isEmpty()) {
 
-            for (NodeDir curr : currents) {
+//            for (NodeDir curr : currents) {
+            while (iterator.hasNext()) {
+                NodeDir curr = iterator.next();
                 for (NodeDir unknown : all) {
                     if (curr.getId().equals(unknown.getParentId())) {
                         curr.getChildrenDirs().add(unknown);
