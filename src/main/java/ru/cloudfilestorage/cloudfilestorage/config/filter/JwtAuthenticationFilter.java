@@ -1,4 +1,4 @@
-package ru.cloudfilestorage.cloudfilestorage.config;
+package ru.cloudfilestorage.cloudfilestorage.config.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
