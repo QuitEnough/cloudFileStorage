@@ -16,8 +16,6 @@ public interface UserService extends UserDetailsService {
 
     UserResponse getUserByEmail(String email);
 
-    List<?> getUserByValue(String value);
-
     boolean isFileOwner(Long userId, Long fileId);
 
     @Override

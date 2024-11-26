@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/files")
 @Tag(name = "File Controller", description = "File API")
+@Slf4j
 public class FileController {
 
     private final FileServiceImpl fileService;
@@ -55,9 +57,11 @@ public class FileController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         var user = (UserDetailsImpl) authentication.getPrincipal();
 
+        log.debug("[Controller] Request to services to save user with name {} and file {}", name, file);
         long fileId = fileService.save(name, directoryId, user.getId());
         UUID uuid = fileService.find(fileId);
         minioService.save(uuid, file);
+        log.debug("[Response] with saved data");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -70,6 +74,7 @@ public class FileController {
             @ApiResponse(responseCode = "500", description = "File not found")
     })
     public void findFile(@RequestParam("fileId") Long fileId, HttpServletResponse response) {
+        log.debug("[RequestParams] finding file with id {}", fileId);
         try (InputStream stream = fileService.download(fileId)) {
             response.setHeader("Content-Disposition", "attachment");
             response.setStatus(HttpServletResponse.SC_OK);
@@ -88,6 +93,7 @@ public class FileController {
             @ApiResponse(responseCode = "500", description = "File not found")
     })
     public ResponseEntity<Void> deleteFile(@RequestParam("id") Long fileId) {
+        log.debug("[RequestParams] deleting file with id {}", fileId);
         minioService.delete(fileService.find(fileId));
         fileService.delete(fileId);
         return new ResponseEntity<>(HttpStatus.OK);

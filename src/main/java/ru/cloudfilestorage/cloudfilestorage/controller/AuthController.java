@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import ru.cloudfilestorage.cloudfilestorage.service.impl.UserServiceImpl;
 @RestController
 @RequestMapping("/public")
 @Tag(name = "Auth Controller", description = "Auth API")
+@Slf4j
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -55,7 +57,9 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "User duplicated values")
     })
     public ResponseEntity<Void> signUp(@RequestBody @Valid UserCreateRequest request) {
+        log.debug("[RequestParams] post user's data {}", request);
         userService.addUser(request);
+        log.debug("[Response] with status CREATED");
         return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
@@ -67,9 +71,11 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "User invalid password or login")
     })
     public JwtAuthenticationResponse authenticate(@RequestBody @Valid AuthenticationRequest request) {
+        log.debug("[RequestParams] authentication with data {}", request);
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         final UserDetails user = userDetailsService.loadUserByUsername(request.getEmail());
+        log.debug("[Response] with token");
         return new JwtAuthenticationResponse(tokenService.generateToken(user));
     }
 
