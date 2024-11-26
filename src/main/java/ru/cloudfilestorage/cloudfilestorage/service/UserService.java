@@ -6,8 +6,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserCreateRequest;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserResponse;
 
-import java.util.List;
-
 public interface UserService extends UserDetailsService {
 
     void addUser(UserCreateRequest request);

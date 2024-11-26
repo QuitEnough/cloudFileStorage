@@ -15,9 +15,6 @@ import ru.cloudfilestorage.cloudfilestorage.exception.UserNotFoundException;
 import ru.cloudfilestorage.cloudfilestorage.repository.UserRepository;
 import ru.cloudfilestorage.cloudfilestorage.service.UserService;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {

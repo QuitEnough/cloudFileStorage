@@ -12,6 +12,8 @@ public interface FileService {
 
     void delete(Long fileId);
 
+    UUID find(Long fileId);
+
     InputStream download(Long fileId);
 
     List<File> findAllFilesByUserId(Long userId);

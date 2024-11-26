@@ -52,6 +52,15 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public UUID find(Long fileId) {
+
+        log.debug("[FileService] finding file with id {}", fileId);
+
+        File file = fileRepository.findById(fileId).get();
+        return file.getUuid();
+    }
+
+    @Override
     public InputStream download(Long fileId) {
 
         log.debug("[FileService] downloading file with id {}", fileId);
