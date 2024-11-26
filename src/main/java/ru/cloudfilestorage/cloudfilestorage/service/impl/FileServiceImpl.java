@@ -3,7 +3,6 @@ package ru.cloudfilestorage.cloudfilestorage.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.File;
-import ru.cloudfilestorage.cloudfilestorage.repository.DirectoryRepository;
 import ru.cloudfilestorage.cloudfilestorage.repository.FileRepository;
 import ru.cloudfilestorage.cloudfilestorage.service.FileService;
 
