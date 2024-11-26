@@ -25,6 +25,19 @@ services:
     depends_on:
       - db
 
+  db:
+    image: postgres
+    container_name: db
+    restart: always
+    ports:
+      - 8888:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${USER_DB}
+      POSTGRES_PASSWORD: ${PASSWORD_DB}
+      POSTGRES_DB: ${NAME_DB}
+
   minio:
     image: minio/minio:latest
     container_name: minio
@@ -49,100 +62,67 @@ services:
       timeout: 20s
       retries: 3
 
-  db:
-    image: postgres
-    container_name: db
-    restart: always
-    ports:
-      - 8888:5432
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: ${USER_DB}
-      POSTGRES_PASSWORD: ${PASSWORD_DB}
-      POSTGRES_DB: ${NAME_DB}
-
-  odfe-node:
-    image: elasticsearch:7.10.1
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1000m"
-        max-file: "10"
-    container_name: odfe-node
-    environment:
-      - discovery.type=single-node
-      - node.name=odfe-node
-      - discovery.seed_hosts=odfe-node
-      - bootstrap.memory_lock=true
-      - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms4096m -Xmx4096m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
-    volumes:
-      - ./elasticsearch_data:/usr/share/elasticsearch/data
+  elasticsearch:
+    image: elasticsearch:7.9.1
+    container_name: elasticsearch
     ports:
       - "9200:9200"
-      - "9600:9600"
-    networks:
-      - odfe-net
-
-  kibana:
-    image: kibana:7.10.1
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100m"
-        max-file: "3"
-    container_name: odfe-kibana
-    ports:
-      - "5601:5601"
-    expose:
-      - "5601"
+      - "9300:9300"
+    volumes:
+      - test_data:/usr/share/elasticsearch/data/
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     environment:
-      ELASTICSEARCH_URL: http://odfe-node:9200
-      ELASTICSEARCH_HOSTS: http://odfe-node:9200
+      - discovery.type=single-node
+      - http.host=0.0.0.0
+      - transport.host=0.0.0.0
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
+      - cluster.name=elasticsearch
+      - bootstrap.memory_lock=true
     networks:
-      - odfe-net
+      - elk
 
   logstash:
-    user: root
-    image: docker.elastic.co/logstash/logstash-oss:7.9.1
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100m"
-        max-file: "3"
+    image: logstash:7.9.1
+    container_name: logstash
     ports:
       - "5044:5044"
-    depends_on:
-      - db
-      - odfe-node
-    environment:
-      - PIPELINE_WORKERS=1
-      - PIPELINE_BATCH_SIZE=125
-      - PIPELINE_BATCH_DELAY=50
+      - "9600:9600"
     volumes:
-      - ./conf/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-      - ./logstash_data:/usr/share/logstash/data
-      - ./conf/postgresql-42.6.0.jar:/usr/share/logstash/postgresql-42.6.0.jar
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ls_data:/usr/share/logstash/data
+
     networks:
-      - odfe-net
+      - elk
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: kibana:7.9.1
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    volumes:
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+      - kb_data:/usr/share/kibana/data
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
 
 networks:
   app_network:
     driver: bridge
-  odfe-net:
+  elk:
+    driver: bridge
+
 volumes:
   postgres_data:
   minio-storage:
-  odfe-net:
-  logstash:
+  test_data:
+  ls_data:
+  kb_data:
 
 
 
