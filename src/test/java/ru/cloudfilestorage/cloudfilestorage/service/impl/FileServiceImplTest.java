@@ -23,6 +23,7 @@ class FileServiceImplTest {
                 .builder()
                 .id(1L)
                 .name("name")
+                //uuid тут и в методе save разные -- попробовать mockStatic
                 .uuid(any())
                 .directoryId(1L)
                 .userId(1L)
