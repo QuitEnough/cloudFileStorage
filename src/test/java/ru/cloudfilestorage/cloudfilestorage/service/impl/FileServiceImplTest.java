@@ -34,4 +34,29 @@ class FileServiceImplTest {
         assertEquals(1L, fileId);
     }
 
+    @Test
+    void testDeleteFile_success() {
+        verify(fileRepository, times(1)).deleteById(any());
+    }
+
+    @Test
+    void testFindFile_success() {
+
+    }
+
+    @Test
+    void testDownloadFile_success() {
+
+    }
+
+    @Test
+    void testFindAllFilesByUserId_success() {
+
+    }
+
+    @Test
+    void testFindAllFilesInCertainDir_success() {
+
+    }
+
 }

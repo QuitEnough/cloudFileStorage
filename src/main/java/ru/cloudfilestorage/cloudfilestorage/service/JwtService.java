@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class JwtService {
 
     private static final Integer ONE_YEAR = 100000 * 60 * 24;
@@ -23,6 +25,7 @@ public class JwtService {
     private final Key key;
 
     public JwtService(@Value("${token.signing.key}") String key) {
+        log.info("JWT key {}", key);
         this.key = Keys.hmacShaKeyFor(key.getBytes());
     }
 
