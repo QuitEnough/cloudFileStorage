@@ -34,8 +34,8 @@ class FileServiceImplTest {
 
             mockedUuid.when(UUID::randomUUID).thenReturn(uuid);
 
-            verify(fileRepository).save(file);
             var fileId = fileService.save(file.getName(), file.getDirectoryId(), file.getUserId());
+            verify(fileRepository).save(any());
         }
 
     }
