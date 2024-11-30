@@ -20,7 +20,6 @@ class FileServiceImplTest {
 
     @Test
     void whenSaveFileThenReturnUserIdSuccess() {
-
         UUID uuid = UUID.randomUUID();
         try (MockedStatic<UUID> mockedUuid = mockStatic(UUID.class)) {
             File file = File
@@ -34,10 +33,9 @@ class FileServiceImplTest {
 
             mockedUuid.when(UUID::randomUUID).thenReturn(uuid);
 
-            var fileId = fileService.save(file.getName(), file.getDirectoryId(), file.getUserId());
+            fileService.save(file.getName(), file.getDirectoryId(), file.getUserId());
             verify(fileRepository).save(any());
         }
-
     }
 
 }
