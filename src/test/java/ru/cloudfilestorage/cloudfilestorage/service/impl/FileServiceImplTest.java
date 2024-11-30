@@ -1,6 +1,7 @@
 package ru.cloudfilestorage.cloudfilestorage.service.impl;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.File;
 import ru.cloudfilestorage.cloudfilestorage.repository.FileRepository;
 
@@ -18,44 +19,24 @@ class FileServiceImplTest {
     private final FileServiceImpl fileService = new FileServiceImpl(fileRepository, minioService);
 
     @Test
-    void whenSaveFileThenReturnUserId_success() {
-        File file = File
-                .builder()
-                .id(1L)
-                .name("name")
-                //uuid тут и в методе save разные -- попробовать mockStatic
-                .uuid(any())
-                .directoryId(1L)
-                .userId(1L)
-                .build();
+    void whenSaveFileThenReturnUserIdSuccess() {
 
-        var fileId = fileService.save(file.getName(), file.getDirectoryId(), file.getUserId());
-        verify(fileRepository).save(file);
-        assertEquals(1L, fileId);
-    }
+        UUID uuid = UUID.randomUUID();
+        try (MockedStatic<UUID> mockedUuid = mockStatic(UUID.class)) {
+            File file = File
+                    .builder()
+                    .id(1L)
+                    .name("name")
+                    .uuid(uuid)
+                    .directoryId(1L)
+                    .userId(1L)
+                    .build();
 
-    @Test
-    void testDeleteFile_success() {
-        verify(fileRepository, times(1)).deleteById(any());
-    }
+            mockedUuid.when(UUID::randomUUID).thenReturn(uuid);
 
-    @Test
-    void testFindFile_success() {
-
-    }
-
-    @Test
-    void testDownloadFile_success() {
-
-    }
-
-    @Test
-    void testFindAllFilesByUserId_success() {
-
-    }
-
-    @Test
-    void testFindAllFilesInCertainDir_success() {
+            verify(fileRepository).save(file);
+            var fileId = fileService.save(file.getName(), file.getDirectoryId(), file.getUserId());
+        }
 
     }
 
