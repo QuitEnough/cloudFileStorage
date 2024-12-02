@@ -38,4 +38,81 @@ class FileServiceImplTest {
         }
     }
 
+    @Test
+    void fileDeleteSuccess() {
+        File file = File
+                .builder()
+                .id(1L)
+                .name("name")
+                .uuid(UUID.randomUUID())
+                .directoryId(1L)
+                .userId(1L)
+                .build();
+
+        fileService.delete(file.getId());
+        verify(fileRepository).deleteById(any());
+    }
+
+    @Test
+    void fileFoundSuccess() {
+        UUID uuid = UUID.randomUUID();
+        File file = File
+                .builder()
+                .id(1L)
+                .name("name")
+                .uuid(uuid)
+                .directoryId(1L)
+                .userId(1L)
+                .build();
+
+        fileService.find(file.getId());
+        verify(fileRepository).findById(any());
+    }
+
+    @Test
+    void fileDownloadedSuccess() {
+        UUID uuid = UUID.randomUUID();
+        File file = File
+                .builder()
+                .id(1L)
+                .name("name")
+                .uuid(uuid)
+                .directoryId(1L)
+                .userId(1L)
+                .build();
+
+        fileService.find(file.getId());
+        verify(minioService).find(any());
+    }
+
+    @Test
+    void findAllFilesByUserIdSuccess() {
+        File file = File
+                .builder()
+                .id(1L)
+                .name("name")
+                .uuid(UUID.randomUUID())
+                .directoryId(1L)
+                .userId(1L)
+                .build();
+
+        fileService.findAllFilesByUserId(file.getUserId());
+        verify(fileRepository).findFilesByUserId(any());
+    }
+
+    @Test
+    void findAllFilesInCertainDirSuccess() {
+        File file = File
+                .builder()
+                .id(1L)
+                .name("name")
+                .uuid(UUID.randomUUID())
+                .directoryId(1L)
+                .userId(1L)
+                .build();
+
+        fileService.findAllFilesInCertainDir(file.getDirectoryId());
+        verify(fileRepository).findFilesByDirectoryId(any());
+    }
+
 }
