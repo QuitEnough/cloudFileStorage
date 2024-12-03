@@ -5,10 +5,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Schema(description = "Request for registration")
+@Builder
 public class UserCreateRequest {
 
     @Schema(description = "Email address", example = "DimaBilan@gmail.com")

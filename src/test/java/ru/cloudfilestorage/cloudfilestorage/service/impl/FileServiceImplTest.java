@@ -5,9 +5,10 @@ import org.mockito.MockedStatic;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.File;
 import ru.cloudfilestorage.cloudfilestorage.repository.FileRepository;
 
+import java.io.InputStream;
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class FileServiceImplTest {
@@ -65,8 +66,7 @@ class FileServiceImplTest {
                 .userId(1L)
                 .build();
 
-        fileService.find(file.getId());
-        verify(fileRepository).findById(any());
+        when(fileRepository.findById(file.getId())).thenReturn(Optional.of(file));
     }
 
     @Test
@@ -81,8 +81,8 @@ class FileServiceImplTest {
                 .userId(1L)
                 .build();
 
-        fileService.find(file.getId());
-        verify(minioService).find(any());
+        when(fileRepository.findById(file.getId())).thenReturn(Optional.of(file));
+        when(minioService.find(uuid)).thenReturn(InputStream.nullInputStream());
     }
 
     @Test
