@@ -1,17 +1,14 @@
 package ru.cloudfilestorage.cloudfilestorage.service.impl;
 
-import io.minio.GetObjectResponse;
 import io.minio.MinioClient;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.InputStream;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class MinioServiceImplTest {
 
