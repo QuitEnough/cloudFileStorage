@@ -27,6 +27,18 @@ class UserServiceImplTest {
     private final UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, encoder);
 
     @Test
+    void userAddedSuccess() {
+        User user = User
+                .builder()
+                .id(1L)
+                .email("mail@mail.ru")
+                .password("Pas4ka")
+                .role(Role.USER)
+                .build();
+        when(userRepository.save(user)).thenReturn(user);
+    }
+
+    @Test
     void getUserByIdSuccess() {
         User user = User
                 .builder()
