@@ -20,7 +20,7 @@ class FileServiceImplTest {
     private final FileServiceImpl fileService = new FileServiceImpl(fileRepository, minioService);
 
     @Test
-    void whenSaveFileThenReturnUserIdSuccess() {
+    void whenSaveFileThenReturnUserId() {
         UUID uuid = UUID.randomUUID();
         try (MockedStatic<UUID> mockedUuid = mockStatic(UUID.class)) {
             File file = File
@@ -40,7 +40,7 @@ class FileServiceImplTest {
     }
 
     @Test
-    void fileDeleteSuccess() {
+    void fileDelete() {
         File file = File
                 .builder()
                 .id(1L)
@@ -55,7 +55,7 @@ class FileServiceImplTest {
     }
 
     @Test
-    void fileFoundSuccess() {
+    void fileFound() {
         UUID uuid = UUID.randomUUID();
         File file = File
                 .builder()
@@ -70,7 +70,7 @@ class FileServiceImplTest {
     }
 
     @Test
-    void fileDownloadedSuccess() {
+    void fileDownloaded() {
         UUID uuid = UUID.randomUUID();
         File file = File
                 .builder()
@@ -86,7 +86,7 @@ class FileServiceImplTest {
     }
 
     @Test
-    void findAllFilesByUserIdSuccess() {
+    void findAllFilesByUserId() {
         File file = File
                 .builder()
                 .id(1L)
@@ -101,7 +101,7 @@ class FileServiceImplTest {
     }
 
     @Test
-    void findAllFilesInCertainDirSuccess() {
+    void findAllFilesInCertainDir() {
         File file = File
                 .builder()
                 .id(1L)

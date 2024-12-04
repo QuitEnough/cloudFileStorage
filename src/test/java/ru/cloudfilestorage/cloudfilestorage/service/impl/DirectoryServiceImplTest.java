@@ -16,7 +16,7 @@ class DirectoryServiceImplTest {
     private final DirectoryServiceImpl directoryService = new DirectoryServiceImpl(directoryRepository);
 
     @Test
-    void directoriesFoundByUserIdSuccess() {
+    void directoriesFoundByUserId() {
         Directory directory = Directory
                 .builder()
                 .id(1L)
@@ -29,7 +29,7 @@ class DirectoryServiceImplTest {
     }
 
     @Test
-    void allDirectoriesFoundInCertainDirSuccess() {
+    void allDirectoriesFoundInCertainDir() {
         Directory directory = Directory
                 .builder()
                 .id(1L)

@@ -27,7 +27,7 @@ class UserServiceImplTest {
     private final UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, encoder);
 
     @Test
-    void userAddedSuccess() {
+    void userAdded() {
         User user = User
                 .builder()
                 .id(1L)
@@ -39,7 +39,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void getUserByIdSuccess() {
+    void getUserById() {
         User user = User
                 .builder()
                 .id(1L)
@@ -52,7 +52,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void userIsFileOwnerSuccess() {
+    void userIsFileOwner() {
         File file = File
                 .builder()
                 .id(1L)
@@ -66,7 +66,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void userLoadedByUsernameSuccess() {
+    void userLoadedByUsername() {
         User user = User
                 .builder()
                 .id(1L)
@@ -89,7 +89,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void userGotByEmailSuccess() {
+    void userGotByEmail() {
         User user = User
                 .builder()
                 .id(1L)

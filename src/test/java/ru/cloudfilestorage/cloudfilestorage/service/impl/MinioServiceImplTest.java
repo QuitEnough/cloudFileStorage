@@ -28,13 +28,13 @@ class MinioServiceImplTest {
     }
 
     @Test
-    void fileDeletedSuccess() throws Exception {
+    void fileDeleted() throws Exception {
         minioService.delete(UUID.randomUUID());
         verify(minioClient).removeObject(any());
     }
 
     @Test
-    void fileFoundSuccess() throws Exception {
+    void fileFound() throws Exception {
         minioService.find(UUID.randomUUID());
         verify(minioClient).getObject(any());
     }
