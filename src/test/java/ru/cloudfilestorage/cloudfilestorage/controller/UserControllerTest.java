@@ -15,7 +15,7 @@ class UserControllerTest {
     private final UserController userController = new UserController(userService);
 
     @Test
-    void testGetUserByIdOrEmail_success() {
+    void userGotByIdOrEmail() {
 
         UserResponse userResponse = UserResponse
                 .builder()
@@ -28,7 +28,6 @@ class UserControllerTest {
         var user = userController.getUserByIdOrEmail(1L, "mail@mail.ru");
 
         assertNotNull(user);
-
     }
 
 }
