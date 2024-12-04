@@ -6,6 +6,8 @@ import ru.cloudfilestorage.cloudfilestorage.repository.DirectoryRepository;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -26,6 +28,14 @@ class DirectoryServiceImplTest {
                 .build();
 
         when(directoryRepository.findDirectoriesByUserId(directory.getUserId())).thenReturn(List.of(directory));
+
+        List<Directory> directories = directoryService.findDirectoriesByUserId(1L);
+
+        assertNotNull(directories);
+        assertEquals(1L, directories.get(0).getId());
+        assertEquals("dir", directories.get(0).getName());
+        assertEquals(1L, directories.get(0).getUserId());
+        assertEquals(1L, directories.get(0).getParentId());
     }
 
     @Test
@@ -39,6 +49,14 @@ class DirectoryServiceImplTest {
                 .build();
 
         when(directoryRepository.findDirectoriesByParentId(directory.getId())).thenReturn(List.of(directory));
+
+        List<Directory> directories = directoryService.findAllDirectoriesInCertainDir(1L);
+
+        assertNotNull(directories);
+        assertEquals(1L, directories.get(0).getId());
+        assertEquals("dir", directories.get(0).getName());
+        assertEquals(1L, directories.get(0).getUserId());
+        assertEquals(1L, directories.get(0).getParentId());
     }
 
 }

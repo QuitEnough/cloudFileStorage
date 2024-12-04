@@ -1,6 +1,7 @@
 package ru.cloudfilestorage.cloudfilestorage.service.impl;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.UserResponse;
 import ru.cloudfilestorage.cloudfilestorage.domain.entity.File;
@@ -13,6 +14,8 @@ import ru.cloudfilestorage.cloudfilestorage.repository.UserRepository;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -49,6 +52,20 @@ class UserServiceImplTest {
                 .build();
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        UserResponse userResponse = UserResponse
+                .builder()
+                .userId(1L)
+                .email("mail@mail.ru")
+                .build();
+
+        when(userMapper.toUserResponse(user)).thenReturn(userResponse);
+
+        UserResponse response = userService.getUserById(user.getId());
+
+        assertNotNull(response);
+        assertEquals(userResponse.getUserId(), response.getUserId());
+        assertEquals(userResponse.getEmail(), response.getEmail());
     }
 
     @Test
@@ -63,6 +80,10 @@ class UserServiceImplTest {
                 .build();
 
         when(userRepository.isFileOwner(file.getUserId(), file.getId())).thenReturn(Boolean.TRUE);
+
+        boolean result = userService.isFileOwner(file.getUserId(), file.getId());
+
+        assertEquals(Boolean.TRUE, result);
     }
 
     @Test
@@ -86,6 +107,12 @@ class UserServiceImplTest {
                 .build();
 
         when(userMapper.toUserDetails(user)).thenReturn(userDetails);
+
+        UserDetails response = userService.loadUserByUsername(user.getEmail());
+
+        assertNotNull(response);
+        assertEquals(userDetails.getUsername(), response.getUsername());
+        assertEquals(userDetails.getPassword(), response.getPassword());
     }
 
     @Test
@@ -107,6 +134,12 @@ class UserServiceImplTest {
                 .build();
 
         when(userMapper.toUserResponse(user)).thenReturn(userResponse);
+
+        UserResponse response = userService.getUserByEmail(user.getEmail());
+
+        assertNotNull(response);
+        assertEquals(userResponse.getUserId(), response.getUserId());
+        assertEquals(userResponse.getEmail(), response.getEmail());
     }
 
 }

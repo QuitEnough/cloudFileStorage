@@ -6,9 +6,12 @@ import ru.cloudfilestorage.cloudfilestorage.domain.entity.File;
 import ru.cloudfilestorage.cloudfilestorage.repository.FileRepository;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 class FileServiceImplTest {
@@ -67,6 +70,11 @@ class FileServiceImplTest {
                 .build();
 
         when(fileRepository.findById(file.getId())).thenReturn(Optional.of(file));
+
+        UUID response = fileService.find(file.getId());
+
+        assertNotNull(response);
+        assertEquals(file.getUuid(), response);
     }
 
     @Test
@@ -83,6 +91,10 @@ class FileServiceImplTest {
 
         when(fileRepository.findById(file.getId())).thenReturn(Optional.of(file));
         when(minioService.find(uuid)).thenReturn(InputStream.nullInputStream());
+
+        InputStream response = fileService.download(file.getId());
+
+        assertNotNull(response);
     }
 
     @Test
@@ -96,8 +108,16 @@ class FileServiceImplTest {
                 .userId(1L)
                 .build();
 
-        fileService.findAllFilesByUserId(file.getUserId());
-        verify(fileRepository).findFilesByUserId(any());
+        when(fileRepository.findFilesByUserId(file.getUserId())).thenReturn(List.of(file));
+
+        List<File> files = fileService.findAllFilesByUserId(file.getUserId());
+
+        assertNotNull(files);
+        assertEquals(file.getId(), files.get(0).getId());
+        assertEquals(file.getName(), files.get(0).getName());
+        assertEquals(file.getUuid(), files.get(0).getUuid());
+        assertEquals(file.getDirectoryId(), files.get(0).getDirectoryId());
+        assertEquals(file.getUserId(), files.get(0).getUserId());
     }
 
     @Test
@@ -111,8 +131,16 @@ class FileServiceImplTest {
                 .userId(1L)
                 .build();
 
-        fileService.findAllFilesInCertainDir(file.getDirectoryId());
-        verify(fileRepository).findFilesByDirectoryId(any());
+        when(fileRepository.findFilesByDirectoryId(file.getDirectoryId())).thenReturn(List.of(file));
+
+        List<File> files = fileService.findAllFilesInCertainDir(file.getDirectoryId());
+
+        assertNotNull(files);
+        assertEquals(file.getId(), files.get(0).getId());
+        assertEquals(file.getName(), files.get(0).getName());
+        assertEquals(file.getUuid(), files.get(0).getUuid());
+        assertEquals(file.getDirectoryId(), files.get(0).getDirectoryId());
+        assertEquals(file.getUserId(), files.get(0).getUserId());
     }
 
 }

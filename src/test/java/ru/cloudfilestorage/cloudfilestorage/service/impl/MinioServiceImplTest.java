@@ -1,14 +1,17 @@
 package ru.cloudfilestorage.cloudfilestorage.service.impl;
 
+import io.minio.GetObjectResponse;
 import io.minio.MinioClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.InputStream;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 class MinioServiceImplTest {
 
@@ -22,9 +25,11 @@ class MinioServiceImplTest {
     void fileSavedSuccess() throws Exception {
         UUID uuid = UUID.randomUUID();
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test".getBytes());
-        minioService.save(uuid, mockMultipartFile);
+
+        boolean response = minioService.save(uuid, mockMultipartFile);
         verify(minioClient).putObject(any());
 
+        assertEquals(Boolean.TRUE, response);
     }
 
     @Test
@@ -35,8 +40,12 @@ class MinioServiceImplTest {
 
     @Test
     void fileFound() throws Exception {
-        minioService.find(UUID.randomUUID());
-        verify(minioClient).getObject(any());
+        GetObjectResponse result = minioClient.getObject(any());
+
+        when(minioClient.getObject(any())).thenReturn(result);
+        InputStream response = minioService.find(UUID.randomUUID());
+
+        assertEquals(result, response);
     }
 
 }
