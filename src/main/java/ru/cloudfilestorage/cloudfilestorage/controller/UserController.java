@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @Tag(name = "User Controller", description = "User API")
+@Slf4j
 public class UserController {
 
     private final UserServiceImpl userService;
@@ -35,6 +37,7 @@ public class UserController {
     })
     public Object getUserByIdOrEmail(@RequestParam(required = false) Long id,
                                      @RequestParam(required = false) String email) {
+        log.debug("[RequestParams] get User with id {} or email {}", id, email);
         if (id != null) {
             return userService.getUserById(id);
         }

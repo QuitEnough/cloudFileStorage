@@ -39,3 +39,5 @@ logging:
 
 springdoc:
   override-with-generic-response: false
+
+

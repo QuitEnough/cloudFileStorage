@@ -1,5 +1,6 @@
 package ru.cloudfilestorage.cloudfilestorage.domain.entity;
 
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
+@Builder
 public class UserDetailsImpl implements UserDetails {
 
     private final static String ROLE_PREFIX = "ROLE_";

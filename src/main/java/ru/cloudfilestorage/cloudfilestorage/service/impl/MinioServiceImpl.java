@@ -4,6 +4,7 @@ import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.io.InputStream;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class MinioServiceImpl implements MinioService {
 
     private final String bucket;
@@ -30,6 +32,9 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public boolean save(UUID uuid, MultipartFile multipartFile) {
+
+        log.debug("[MinioService] Saving file {} with uuid {}", multipartFile, uuid);
+
         try {
             InputStream inputStream = new ByteArrayInputStream(multipartFile.getBytes());
             minioClient.putObject(
@@ -47,6 +52,9 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public void delete(UUID uuid) {
+
+        log.debug("[MinioService] deleting file with uuid {}", uuid);
+
         try {
             minioClient.removeObject(
                     RemoveObjectArgs
@@ -61,6 +69,9 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public InputStream find(UUID uuid) {
+
+        log.debug("[MinioService] finding file with uuid {}", uuid);
+
         try {
             return minioClient.getObject(
                     GetObjectArgs

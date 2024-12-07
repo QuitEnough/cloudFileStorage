@@ -1,5 +1,6 @@
 package ru.cloudfilestorage.cloudfilestorage.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.cloudfilestorage.cloudfilestorage.domain.dto.Node;
@@ -11,8 +12,10 @@ import ru.cloudfilestorage.cloudfilestorage.service.impl.DirectoryServiceImpl;
 import ru.cloudfilestorage.cloudfilestorage.service.impl.FileServiceImpl;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class StructureService {
 
     private final FileServiceImpl fileService;
@@ -51,7 +54,6 @@ public class StructureService {
                     .type("file")
                     .id(file.getId())
                     .name(file.getName())
-                    .uuid(file.getUuid())
                     .build();
             nodeFileList.add(nodeFile);
         }
@@ -59,7 +61,9 @@ public class StructureService {
         return Node.generateNode(nodeDirsList, nodeFileList);
     }
 
-    public List<Node> getAllDataForUser(Long userId) {
+    public Node getEnvelopeDirsForUser(Long userId) {
+        List<NodeDir> rootList = new ArrayList<>();
+        List<NodeDir> toRemove = new ArrayList<>();
 
         List<NodeDir> all = directoryService.findDirectoriesByUserId(userId)
                 .stream()
@@ -68,58 +72,88 @@ public class StructureService {
                         .type("dir")
                         .id(e.getId())
                         .name(e.getName())
+                        .parentId(e.getParentId())
+                        .childrenDirs(new ArrayList<>())
+                        .files(new ArrayList<>())
                         .build())
-                .toList();
+                .collect(Collectors.toList());
 
-        List<NodeDir> rootList = new LinkedList<>();
-        List<NodeDir> currentList = new LinkedList<>();
-        List<NodeDir> nextList = new LinkedList<>();
-
-        for (Directory d : all) {
-            if (d.getParentId() == null) {
-                currentList.add(d);
-                all.remove(d);
+        for (NodeDir dir : all) {
+            if (dir.getParentId() == null) {
+                rootList.add(dir);
+                toRemove.add(dir);
             }
         }
-        for (int i = 0; i < currentList.size(); i++) {
-            NodeDir nodeDir = NodeDir
-                    .builder()
-                    .type("dir")
-                    .id(currentList.get(i).getId())
-//                    .envelopeDirs()   --- как вставить лист, если я еще не знаю значений
-                    .build();
-        }
-        List<Node> nodeList = new LinkedList<>();
 
-        long maxRef = all
-                .stream()
-                .max(Comparator.comparing(Directory::getParentId))
-                .get()
-                .getParentId();
-        for (int i = 1; i <= maxRef; i++) {
-            for (Directory d : all) {
-                if (d.getParentId().equals(1L)) {
-                    currentList.add(d);
+        all.removeAll(toRemove);
+        toRemove.clear();
+
+        List<NodeDir> currents = new LinkedList<>(rootList);
+        List<NodeDir> next = new LinkedList<>();
+        Iterator<NodeDir> iterator = currents.iterator();
+
+        while (!all.isEmpty()) {
+
+//            for (NodeDir curr : currents) {
+            while (iterator.hasNext()) {
+                NodeDir curr = iterator.next();
+                for (NodeDir unknown : all) {
+                    if (curr.getId().equals(unknown.getParentId())) {
+                        curr.getChildrenDirs().add(unknown);
+
+                        next.add(unknown);
+                        toRemove.add(unknown);
+                    }
+                }
+                all.removeAll(toRemove);
+                toRemove.clear();
+            }
+
+            currents = next;
+        }
+
+        return process(userId, rootList);
+    }
+
+    public Node process(Long userId, List<NodeDir> nodeDirs) {
+        List<NodeFile> topFiles = new ArrayList<>();
+        Node node = Node.generateNode(nodeDirs, topFiles);
+
+        List<File> files = new ArrayList<>(fileService.findAllFilesByUserId(userId));
+        List<File> toRemove = new ArrayList<>();
+
+        Queue<NodeDir> queue = new LinkedList<>(nodeDirs);
+
+        for (File file : files) {
+            if (file.getDirectoryId() == null) {
+                topFiles.add(NodeFile.builder()
+                        .type("file")
+                        .id(file.getId())
+                        .name(file.getName())
+                        .build());
+                toRemove.add(file);
+            }
+        }
+
+        files.removeAll(toRemove);
+        toRemove.clear();
+
+        NodeDir nodeDir;
+        while ((nodeDir = queue.poll()) != null) {
+
+            for (File file : files) {
+                if (nodeDir.getId().equals(nodeDir.getParentId())) {
+                    nodeDir.getFiles().add(NodeFile.builder()
+                            .type("file")
+                            .id(file.getId())
+                            .name(file.getName())
+                            .build());
+
+                    queue.addAll(nodeDir.getChildrenDirs());
                 }
             }
         }
 
-        int count = all.size();
-        for (Directory d : all) {
-            for (int i = 1; i <= all.size(); i++) {
-
-            }
-        }
-
-        return List.of();
+        return node;
     }
-
-    private List<NodeDir> bfs(List<Directory> dirs) {
-        for (int i = 0; i < dirs.size(); i++) {
-            long minParentId = dirs.stream().min(Comparator.comparing(Directory::getParentId)).get().getParentId();
-
-        }
-        return List.of();
-    }
-
 }

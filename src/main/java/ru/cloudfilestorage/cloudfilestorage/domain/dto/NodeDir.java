@@ -1,5 +1,6 @@
 package ru.cloudfilestorage.cloudfilestorage.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,6 +16,12 @@ public class NodeDir {
 
     private String name;
 
-    private List<NodeDir> envelopeDirs;
+    @JsonIgnore
+    private Long parentId;
 
+    @JsonIgnore
+    private List<NodeDir> childrenDirs;
+
+    @JsonIgnore
+    private List<NodeFile> files;
 }
